@@ -3,6 +3,7 @@
 ## TODO
 - [ ] Write tests
 - [ ] Setup [goose](https://github.com/pressly/goose) for migrations
+- [ ] Setup Swagger
 
 ## Authentication middleware
 ```go
