@@ -2,6 +2,8 @@
 
 This is a Gin boilerplate organized in a modular way.
 
+## Table Of Contents
+
 ## Environmental Variables
 
 Following variables are required.
@@ -17,3 +19,11 @@ export APP_API_KEY="dummy_key"
 - You can find generated docs in `docs` package
 
 To view docs, navigate to <http://localhost:8080/swagger/index.html> or to <http://localhost:8080/swagger/doc.json> for raw _JSON_
+
+## TODO
+
+- [ ] Implement Auth
+- [ ] Containerise
+- [ ] Cleanup Tests
+- [ ] Cleanup Lint, Vet
+- [ ] Setup CI/CD
