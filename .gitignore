@@ -10,6 +10,7 @@
 
 # Built artifacts
 bin
+tmp
 
 # Dot env file
 .env*
