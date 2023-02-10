@@ -1,0 +1,1 @@
+# This contains Go code that can be used internally, but which other repositories should be able to reference as dependencies as well. If you’re using Protobufs over gRPC, this is where you can put your protoc codegen-ed type definitions.

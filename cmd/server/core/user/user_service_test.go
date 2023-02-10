@@ -2,7 +2,7 @@ package user
 
 import (
 	"errors"
-	"gin-starter/cmd/app/common"
+	"gin-starter/cmd/server/common"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

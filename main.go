@@ -6,9 +6,9 @@ import (
 	"log"
 	"net/http"
 
-	"gin-starter/cmd/app/config"
-	"gin-starter/cmd/app/core/user"
-	"gin-starter/cmd/app/utils"
+	"gin-starter/cmd/server/config"
+	"gin-starter/cmd/server/core/user"
+	"gin-starter/cmd/server/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -30,7 +30,7 @@ import (
 // @name Authorization
 func main() {
 	// load application configurations
-	if err := config.LoadConfig("./config"); err != nil {
+	if err := config.LoadConfig("./configs"); err != nil {
 		panic(fmt.Errorf("invalid application configuration: %s", err))
 	}
 

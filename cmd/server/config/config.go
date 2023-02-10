@@ -26,9 +26,8 @@ type appConfig struct {
 // LoadConfig loads config from files
 func LoadConfig(configPaths ...string) error {
 	v := viper.New()
-	v.SetConfigName("app")
+	v.SetConfigName("server")
 	v.SetConfigType("yaml")
-	v.SetEnvPrefix("APP")
 	v.AutomaticEnv()
 
 	Config.DSN = fmt.Sprintf("%v", v.Get("DSN"))

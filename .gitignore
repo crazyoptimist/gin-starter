@@ -8,9 +8,8 @@
 # Test binary, built with `go test -c`
 *.test
 
-# Built artifacts
-bin
-tmp
+# Live reload
+.tmp
 
 # Dot env file
 .env*
