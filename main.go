@@ -1,18 +1,17 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
-	"net/http"
 
 	"gin-starter/cmd/server/config"
 	"gin-starter/cmd/server/core/user"
-	"gin-starter/cmd/server/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+
+	docs "gin-starter/docs"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -24,10 +23,6 @@ import (
 // @termsOfService http://swagger.io/terms/
 
 // @BasePath /api/v1
-
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
 func main() {
 	// load application configurations
 	if err := config.LoadConfig("./configs"); err != nil {
@@ -46,11 +41,14 @@ func main() {
 	r.Use(gin.Recovery())
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	v1 := r.Group("/api/v1")
 	{
-		v1.Use(auth())
-		v1.GET("/users/:id", user.GetUser)
+		users := v1.Group("/users")
+		{
+			users.GET(":id", user.GetUser)
+		}
 	}
 
 	config.Config.DB, config.Config.DBErr = gorm.Open("postgres", config.Config.DSN)
@@ -58,26 +56,11 @@ func main() {
 		panic(config.Config.DBErr)
 	}
 
-	// config.Config.DB.AutoMigrate(&models.User{}) // This is needed for generation of schema for postgres image.
+	// config.Config.DB.AutoMigrate(&models.User{})
 
 	defer config.Config.DB.Close()
 
 	log.Println("Successfully connected to database")
 
 	r.Run(fmt.Sprintf(":%v", config.Config.ServerPort))
-}
-
-func auth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
-		if len(authHeader) == 0 {
-			utils.NewError(c, http.StatusUnauthorized, errors.New("Authorization is required Header"))
-			c.Abort()
-		}
-		if authHeader != config.Config.ApiKey {
-			utils.NewError(c, http.StatusUnauthorized, fmt.Errorf("this user isn't authorized to this operation: api_key=%s", authHeader))
-			c.Abort()
-		}
-		c.Next()
-	}
 }

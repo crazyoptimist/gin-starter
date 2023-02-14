@@ -14,8 +14,8 @@ export APP_API_KEY="dummy_key"
 
 ## API Documentation
 
-- Application uses [gin-swagger](https://github.com/swaggo/gin-swagger).
-- To generate/update docs use `swag init` (from `/gin-starter/cmd/app`)
+- Application uses [gin-swagger](https://github.com/swaggo/gin-swagger)
+- To generate/update docs use `swag init` (install swag prior: `go install github.com/swaggo/swag/cmd/swag@latest`)
 - You can find generated docs in `docs` package
 
 To view docs, navigate to <http://localhost:8080/swagger/index.html> or to <http://localhost:8080/swagger/doc.json> for raw _JSON_
