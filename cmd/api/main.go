@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"gin-starter/cmd/server/config"
-	"gin-starter/cmd/server/core/user"
+	"gin-starter/cmd/api/config"
+	"gin-starter/internal/user"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"

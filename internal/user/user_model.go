@@ -1,6 +1,6 @@
 package user
 
-import "gin-starter/cmd/server/common"
+import "gin-starter/pkg/common"
 
 type User struct {
 	common.Model

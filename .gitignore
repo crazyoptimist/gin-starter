@@ -9,7 +9,7 @@
 *.test
 
 # Live reload
-.tmp
+tmp
 
 # Dot env file
 .env*

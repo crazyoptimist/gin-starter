@@ -26,7 +26,7 @@ type appConfig struct {
 // LoadConfig loads config from files
 func LoadConfig(configPaths ...string) error {
 	v := viper.New()
-	v.SetConfigName("server")
+	v.SetConfigName("api")
 	v.SetConfigType("yaml")
 	v.AutomaticEnv()
 

@@ -1,6 +1,6 @@
 package user
 
-import "gin-starter/cmd/server/config"
+import "gin-starter/cmd/api/config"
 
 // UserDAO persists user data in database
 type UserDAO struct{}
