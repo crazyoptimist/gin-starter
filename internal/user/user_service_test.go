@@ -35,7 +35,6 @@ func newMockUserDAO() userDAO {
 	}
 }
 
-// Mock Get function that replaces real User DAO
 func (m *mockUserDAO) Get(id uint) (*User, error) {
 	for _, record := range m.records {
 		if record.ID == id {
