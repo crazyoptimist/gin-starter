@@ -4,17 +4,15 @@ import (
 	"fmt"
 	"log"
 
-	"gin-starter/cmd/api/config"
-	"gin-starter/internal/user"
-
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	docs "gin-starter/docs"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+
+	"gin-starter/cmd/api/config"
+	"gin-starter/internal/user"
 )
 
 // @title Gin Starter Swagger 2.0
@@ -26,6 +24,7 @@ func main() {
 	if err := config.LoadConfig("./configs"); err != nil {
 		panic(fmt.Errorf("invalid application configuration: %s", err))
 	}
+	config.ConnectDB()
 
 	r := gin.New()
 
@@ -44,17 +43,5 @@ func main() {
 		}
 	}
 
-	var dbErr error
-	config.Config.DB, dbErr = gorm.Open("postgres", config.Config.DSN)
-	if dbErr != nil {
-		panic(dbErr)
-	}
-
-	// config.Config.DB.AutoMigrate(&models.User{})
-
-	defer config.Config.DB.Close()
-
-	log.Println("Successfully connected to database")
-
-	r.Run(fmt.Sprintf(":%v", config.Config.ServerPort))
+	log.Fatalln(r.Run(fmt.Sprintf(":%v", config.Config.ServerPort)))
 }

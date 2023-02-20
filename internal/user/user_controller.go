@@ -14,7 +14,6 @@ import (
 // @Param id path integer true "User ID"
 // @Success 200 {object} User
 // @Router /users/{id} [get]
-// @Security ApiKeyAuth
 func GetUser(c *gin.Context) {
 	s := NewUserService(NewUserDAO())
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)

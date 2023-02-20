@@ -2,9 +2,11 @@ package config
 
 import (
 	"fmt"
+	"log"
 
-	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var Config appConfig
@@ -33,4 +35,12 @@ func LoadConfig(configPaths ...string) error {
 	}
 
 	return v.Unmarshal(&Config)
+}
+
+func ConnectDB() {
+	var dbErr error
+	Config.DB, dbErr = gorm.Open(postgres.Open(Config.DSN), &gorm.Config{})
+	if dbErr != nil {
+		log.Fatalln("Database connection failed: ", dbErr)
+	}
 }
