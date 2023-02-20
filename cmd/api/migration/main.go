@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	if err := config.LoadConfig("./configs"); err != nil {
+	if err := config.LoadConfig(".env"); err != nil {
 		panic(fmt.Errorf("invalid application configuration: %s", err))
 	}
 	config.ConnectDB()

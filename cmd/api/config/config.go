@@ -13,22 +13,16 @@ var Config appConfig
 
 type appConfig struct {
 	DB         *gorm.DB
-	ServerPort int    `mapstructure:"server_port"`
-	DSN        string `mapstructure:"dsn"`
+	ServerPort int    `mapstructure:"SERVER_PORT"`
+	DSN        string `mapstructure:"DSN"`
 }
 
-func LoadConfig(configPaths ...string) error {
+func LoadConfig(configFile string) error {
 	v := viper.New()
-	v.SetConfigName("api")
-	v.SetConfigType("yaml")
+	v.SetConfigFile(configFile)
 	v.AutomaticEnv()
 
-	v.SetDefault("server_port", 8080)
-	v.SetDefault("dsn", fmt.Sprintf("%v", v.Get("DSN")))
-
-	for _, path := range configPaths {
-		v.AddConfigPath(path)
-	}
+	v.SetDefault("SERVER_PORT", 8080)
 
 	if err := v.ReadInConfig(); err != nil {
 		return fmt.Errorf("failed to read the configuration file: %s", err)

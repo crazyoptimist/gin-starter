@@ -21,8 +21,8 @@ import (
 
 // @BasePath /api/v1
 func main() {
-	if err := config.LoadConfig("./configs"); err != nil {
-		panic(fmt.Errorf("invalid application configuration: %s", err))
+	if err := config.LoadConfig(".env"); err != nil {
+		panic(fmt.Errorf("Missing env file: %s", err))
 	}
 	config.ConnectDB()
 
