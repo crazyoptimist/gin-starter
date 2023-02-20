@@ -9,8 +9,8 @@ bin
 # Test binary, built with `go test -c`
 *.test
 
-# Live reload
-tmp
+# Live reload(Air)
+.tmp
 
 # Dot env file
 .env*
