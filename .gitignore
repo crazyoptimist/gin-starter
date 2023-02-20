@@ -13,7 +13,7 @@ bin
 .tmp
 
 # Dot env file
-.env*
+.env
 
 # 3rd party dependencies
 vendor

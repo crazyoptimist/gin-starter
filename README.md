@@ -6,10 +6,10 @@ This is a Gin boilerplate organized in a modular way.
 
 ## Environment Variables
 
-Following variables are required.
+Create a dot env file:
 
-```
-export APP_DSN="host=localhost user=admin password=password dbname=test port=5432 sslmode=disable TimeZone=America/Chicago"
+```bash
+cp .env.example .env
 ```
 
 ## API Documentation
