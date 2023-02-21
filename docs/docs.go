@@ -17,9 +17,6 @@ const docTemplate = `{
     "paths": {
         "/users/{id}": {
             "get": {
-                "produces": [
-                    "application/json"
-                ],
                 "tags": [
                     "users"
                 ],
