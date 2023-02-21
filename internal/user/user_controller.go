@@ -11,7 +11,6 @@ import (
 // GetUser godoc
 // @Summary Retrieves a user by ID
 // @Tags users
-// @Produce json
 // @Param id path integer true "User ID"
 // @Success 200	{object} User
 // @Router /users/{id} [get]
