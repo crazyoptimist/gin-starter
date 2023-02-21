@@ -1,8 +1,7 @@
-package main
+package router
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/gin-gonic/gin"
 
@@ -15,12 +14,13 @@ import (
 	"gin-starter/internal/user"
 )
 
-// @title Gin Starter Swagger 2.0
-// @version 1.0.0
-// @description Swagger API Documentation.
+//	@Title			Gin Starter Swagger 2.0
+//	@Version		1.0.0
+//	@Description	Swagger API Documentation.
 
-// @BasePath /api/v1
-func main() {
+//	@BasePath	/api
+
+func RegisterRoutes() *gin.Engine {
 	if err := config.LoadConfig(".env"); err != nil {
 		panic(fmt.Errorf("Missing env file: %s", err))
 	}
@@ -33,15 +33,18 @@ func main() {
 	r.Use(gin.Recovery())
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.BasePath = "/api"
 
-	v1 := r.Group("/api/v1")
+	api := r.Group("/api")
 	{
-		users := v1.Group("/users")
+		admin := api.Group("/admin")
 		{
-			users.GET(":id", user.GetUser)
+			users := admin.Group("/users")
+			{
+				users.GET(":id", user.GetUser)
+			}
 		}
 	}
 
-	log.Fatalln(r.Run(fmt.Sprintf(":%v", config.Config.ServerPort)))
+	return r
 }

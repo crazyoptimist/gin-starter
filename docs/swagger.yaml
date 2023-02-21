@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /api
 definitions:
   user.User:
     properties:
@@ -22,9 +22,8 @@ definitions:
 info:
   contact: {}
   description: Swagger API Documentation.
-  termsOfService: http://swagger.io/terms/
   title: Gin Starter Swagger 2.0
-  version: "1.0"
+  version: 1.0.0
 paths:
   /users/{id}:
     get:
@@ -41,7 +40,5 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/user.User'
-      security:
-      - ApiKeyAuth: []
       summary: Retrieves user based on given ID
 swagger: "2.0"
