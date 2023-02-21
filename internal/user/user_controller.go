@@ -9,11 +9,12 @@ import (
 )
 
 // GetUser godoc
-//	@Summary	Retrieves user based on given ID
-//	@Produce	json
-//	@Param		id	path		integer	true	"User ID"
-//	@Success	200	{object}	User
-//	@Router		/users/{id} [get]
+// @Summary Retrieves a user by ID
+// @Tags users
+// @Produce json
+// @Param id path integer true "User ID"
+// @Success 200	{object} User
+// @Router /users/{id} [get]
 func GetUser(c *gin.Context) {
 	s := NewUserService(NewUserDAO())
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)

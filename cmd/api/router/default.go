@@ -14,12 +14,6 @@ import (
 	"gin-starter/internal/user"
 )
 
-//	@Title			Gin Starter Swagger 2.0
-//	@Version		1.0.0
-//	@Description	Swagger API Documentation.
-
-//	@BasePath	/api
-
 func RegisterRoutes() *gin.Engine {
 	if err := config.LoadConfig(".env"); err != nil {
 		panic(fmt.Errorf("Missing env file: %s", err))
@@ -31,9 +25,6 @@ func RegisterRoutes() *gin.Engine {
 	r.Use(gin.Logger())
 
 	r.Use(gin.Recovery())
-
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	docs.SwaggerInfo.BasePath = "/api"
 
 	api := r.Group("/api")
 	{
@@ -47,4 +38,12 @@ func RegisterRoutes() *gin.Engine {
 	}
 
 	return r
+}
+
+func SetupSwagger(r *gin.Engine) {
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	docs.SwaggerInfo.BasePath = "/api"
+	docs.SwaggerInfo.Title = "Gin Starter Swagger 2.0"
+	docs.SwaggerInfo.Version = "1.0.0"
+	docs.SwaggerInfo.Description = "Swagger API Documentation"
 }

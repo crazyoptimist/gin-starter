@@ -1,19 +1,18 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Swagger API Documentation.",
-        "title": "Gin Starter Swagger 2.0",
-        "contact": {},
-        "version": "1.0.0"
+        "contact": {}
     },
-    "basePath": "/api",
     "paths": {
         "/users/{id}": {
             "get": {
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Retrieves user based on given ID",
+                "tags": [
+                    "users"
+                ],
+                "summary": "Retrieves a user by ID",
                 "parameters": [
                     {
                         "type": "integer",

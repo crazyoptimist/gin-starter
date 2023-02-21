@@ -1,4 +1,3 @@
-basePath: /api
 definitions:
   user.User:
     properties:
@@ -21,9 +20,6 @@ definitions:
     type: object
 info:
   contact: {}
-  description: Swagger API Documentation.
-  title: Gin Starter Swagger 2.0
-  version: 1.0.0
 paths:
   /users/{id}:
     get:
@@ -40,5 +36,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/user.User'
-      summary: Retrieves user based on given ID
+      summary: Retrieves a user by ID
+      tags:
+      - users
 swagger: "2.0"

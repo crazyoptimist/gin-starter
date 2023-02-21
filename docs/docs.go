@@ -20,7 +20,10 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Retrieves user based on given ID",
+                "tags": [
+                    "users"
+                ],
+                "summary": "Retrieves a user by ID",
                 "parameters": [
                     {
                         "type": "integer",
@@ -76,12 +79,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0.0",
+	Version:          "",
 	Host:             "",
-	BasePath:         "/api",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Gin Starter Swagger 2.0",
-	Description:      "Swagger API Documentation.",
+	Title:            "",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
