@@ -3,14 +3,14 @@ package utils
 import (
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHashPassword(t *testing.T) {
 	password := "test*password"
 	hashedPassword, err := HashPassword(password)
-	if err != nil {
-		t.Errorf("Expected no error but got: %v", err)
-	}
+	assert.NoError(t, err)
 
 	os.Setenv("password", password)
 	os.Setenv("hashedPassword", hashedPassword)
@@ -21,7 +21,5 @@ func TestVerifyPassword(t *testing.T) {
 	hashedPassword := os.Getenv("hashedPassword")
 
 	err := VerifyPassword(hashedPassword, password)
-	if err != nil {
-		t.Errorf("Expected no error but got: %v", err)
-	}
+	assert.NoError(t, err)
 }
