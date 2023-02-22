@@ -10,7 +10,7 @@ import (
 
 func main() {
 	if err := config.LoadConfig(".env"); err != nil {
-		panic(fmt.Errorf("Missing env file: %s", err))
+		panic(fmt.Errorf("Error while loading env file: %s", err))
 	}
 	config.ConnectDB()
 
