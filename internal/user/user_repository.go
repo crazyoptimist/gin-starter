@@ -4,6 +4,16 @@ import (
 	"gorm.io/gorm"
 )
 
+type IUserRepository interface {
+	Save(user User) (User, error)
+	FindAll() []User
+	FindById(id uint) (User, error)
+	Delete(user User) error
+}
+
+// Check if the implementation satisfies all methods of interface
+var _ IUserRepository = (*UserRepository)(nil)
+
 type UserRepository struct {
 	DB *gorm.DB
 }
