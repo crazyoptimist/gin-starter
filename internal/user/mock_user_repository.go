@@ -48,6 +48,6 @@ func (r *mockUserRepository) FindById(id uint) (*User, error) {
 }
 
 func (r *mockUserRepository) Delete(user User) error {
-	utils.RemoveAt[User](r.records, int(user.ID))
+	utils.RemoveAt(r.records, int(user.ID))
 	return nil
 }
