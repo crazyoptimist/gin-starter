@@ -45,9 +45,6 @@ const docTemplate = `{
         "user.User": {
             "type": "object",
             "properties": {
-                "address": {
-                    "type": "string"
-                },
                 "created_at": {
                     "type": "string"
                 },
@@ -57,13 +54,13 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "first_name": {
+                "firstName": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "last_name": {
+                "lastName": {
                     "type": "string"
                 },
                 "updated_at": {
