@@ -1,17 +1,25 @@
 package user
 
-type userDAO interface {
-	Get(id uint) (*User, error)
-}
-
 type UserService struct {
-	dao userDAO
+	UserRepository IUserRepository
 }
 
-func NewUserService(dao userDAO) *UserService {
-	return &UserService{dao}
+func NewUserService(repository IUserRepository) UserService {
+	return UserService{UserRepository: repository}
 }
 
-func (s *UserService) Get(id uint) (*User, error) {
-	return s.dao.Get(id)
+func (u *UserService) Save(user User) (*User, error) {
+	return u.UserRepository.Save(user)
+}
+
+func (u *UserService) FindAll() []User {
+	return u.UserRepository.FindAll()
+}
+
+func (u *UserService) FindById(id uint) (*User, error) {
+	return u.UserRepository.FindById(id)
+}
+
+func (u *UserService) Delete(user User) error {
+	return u.UserRepository.Delete(user)
 }

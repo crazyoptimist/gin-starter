@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
@@ -12,9 +13,15 @@ import (
 var Config appConfig
 
 type appConfig struct {
-	DB         *gorm.DB
+	DB *gorm.DB
+
 	ServerPort int    `mapstructure:"SERVER_PORT"`
 	DSN        string `mapstructure:"DSN"`
+
+	JwtAccessTokenSecret     string        `mapstructure:"JWT_ACCESS_TOKEN_SECRET"`
+	JwtRefreshTokenSecret    string        `mapstructure:"JWT_REFRESH_TOKEN_SECRET"`
+	JwtAccessTokenExpiresIn  time.Duration `mapstructure:"JWT_ACCESS_TOKEN__EXPIRES_IN"`
+	JwtRefreshTokenExpiresIn time.Duration `mapstructure:"JWT_REFRESH_TOKEN_EXPIRES_IN"`
 }
 
 func LoadConfig(configFile string) error {

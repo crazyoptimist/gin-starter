@@ -1,43 +1,34 @@
 package router
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 
 	docs "gin-starter/docs"
+	"gin-starter/internal/user"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-
-	"gin-starter/cmd/api/config"
-	"gin-starter/internal/user"
 )
 
 func RegisterRoutes() *gin.Engine {
-	if err := config.LoadConfig(".env"); err != nil {
-		panic(fmt.Errorf("Missing env file: %s", err))
-	}
-	config.ConnectDB()
+	router := gin.New()
 
-	r := gin.New()
+	router.Use(gin.Logger())
 
-	r.Use(gin.Logger())
+	router.Use(gin.Recovery())
 
-	r.Use(gin.Recovery())
-
-	api := r.Group("/api")
+	api := router.Group("/api")
 	{
 		admin := api.Group("/admin")
 		{
 			users := admin.Group("/users")
 			{
-				users.GET(":id", user.GetUser)
+				user.RegisterRoutes(users)
 			}
 		}
 	}
 
-	return r
+	return router
 }
 
 func SetupSwagger(r *gin.Engine) {

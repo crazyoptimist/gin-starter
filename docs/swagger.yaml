@@ -1,19 +1,17 @@
 definitions:
   user.User:
     properties:
-      address:
-        type: string
       created_at:
         type: string
       deleted_at:
         type: string
       email:
         type: string
-      first_name:
+      firstName:
         type: string
       id:
         type: integer
-      last_name:
+      lastName:
         type: string
       updated_at:
         type: string

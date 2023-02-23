@@ -1,3 +1,5 @@
+test:
+	go test -v ./...
 db_migrate:
 	go run ./cmd/api/migration/main.go
 docs_generate:
