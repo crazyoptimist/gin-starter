@@ -6,7 +6,18 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
+
+type UserController struct {
+	UserService UserService
+}
+
+func NewUserController(db *gorm.DB) UserController {
+	userRepository := NewUserRepository(db)
+	userService := NewUserService(userRepository)
+	return UserController{UserService: userService}
+}
 
 // GetUser godoc
 // @Summary Retrieves a user by ID
@@ -14,10 +25,9 @@ import (
 // @Param id path integer true "User ID"
 // @Success 200	{object} User
 // @Router /users/{id} [get]
-func GetUser(c *gin.Context) {
-	s := NewUserService(NewUserDAO())
+func (u *UserController) FindById(c *gin.Context) {
 	id, _ := strconv.ParseUint(c.Param("id"), 10, 32)
-	if user, err := s.Get(uint(id)); err != nil {
+	if user, err := u.UserService.FindById(uint(id)); err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		log.Println(err)
 	} else {
