@@ -8,7 +8,7 @@ func NewUserService(repository IUserRepository) UserService {
 	return UserService{UserRepository: repository}
 }
 
-func (u *UserService) Save(user User) (User, error) {
+func (u *UserService) Save(user User) (*User, error) {
 	return u.UserRepository.Save(user)
 }
 
@@ -16,7 +16,7 @@ func (u *UserService) FindAll() []User {
 	return u.UserRepository.FindAll()
 }
 
-func (u *UserService) FindById(id uint) (User, error) {
+func (u *UserService) FindById(id uint) (*User, error) {
 	return u.UserRepository.FindById(id)
 }
 

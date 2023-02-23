@@ -5,9 +5,9 @@ import (
 )
 
 type IUserRepository interface {
-	Save(user User) (User, error)
+	Save(user User) (*User, error)
 	FindAll() []User
-	FindById(id uint) (User, error)
+	FindById(id uint) (*User, error)
 	Delete(user User) error
 }
 
@@ -22,14 +22,14 @@ func NewUserRepository(DB *gorm.DB) *UserRepository {
 	return &UserRepository{DB: DB}
 }
 
-func (u *UserRepository) Save(user User) (User, error) {
+func (u *UserRepository) Save(user User) (*User, error) {
 	err := u.DB.Save(&user).Error
 
 	if err != nil {
-		return User{}, err
+		return nil, err
 	}
 
-	return user, nil
+	return &user, nil
 }
 
 func (u *UserRepository) FindAll() []User {
@@ -40,12 +40,12 @@ func (u *UserRepository) FindAll() []User {
 	return users
 }
 
-func (u *UserRepository) FindById(id uint) (User, error) {
+func (u *UserRepository) FindById(id uint) (*User, error) {
 	var user User
 
 	err := u.DB.Where("id = ?", id).First(&user).Error
 
-	return user, err
+	return &user, err
 }
 
 func (u *UserRepository) Delete(user User) error {
