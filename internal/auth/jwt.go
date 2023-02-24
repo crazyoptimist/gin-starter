@@ -8,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func GenerateAccessToken(userId string) (string, error) {
+func GenerateAccessToken(userId uint) (string, error) {
 
 	secretKey := config.Config.JwtAccessTokenSecret
 	expiresIn := config.Config.JwtAccessTokenExpiresIn
@@ -29,7 +29,7 @@ func GenerateAccessToken(userId string) (string, error) {
 	return accessToken, nil
 }
 
-func GenerateRefreshToken(userId string) (string, error) {
+func GenerateRefreshToken(userId uint) (string, error) {
 
 	secretKey := config.Config.JwtRefreshTokenSecret
 	expiresIn := config.Config.JwtRefreshTokenExpiresIn
@@ -50,7 +50,7 @@ func GenerateRefreshToken(userId string) (string, error) {
 	return refreshToken, nil
 }
 
-func GenerateTokenPair(userId string) (string, string, error) {
+func GenerateTokenPair(userId uint) (string, string, error) {
 
 	accessToken, err := GenerateAccessToken(userId)
 	if err != nil {
@@ -65,19 +65,17 @@ func GenerateTokenPair(userId string) (string, string, error) {
 	return accessToken, refreshToken, nil
 }
 
-func ValidateToken(tokenString string) (bool, string, string, error) {
+func ValidateToken(tokenString string) (isValid bool, userId uint, keyId string, err error) {
 
 	var key []byte
-
-	var keyID string
 
 	claims := jwt.MapClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 
-		keyID = token.Header["kid"].(string)
+		keyId = token.Header["kid"].(string)
 
-		switch keyID {
+		switch keyId {
 		case "access_token":
 			key = []byte(config.Config.JwtAccessTokenSecret)
 		case "refresh_token":
@@ -90,15 +88,17 @@ func ValidateToken(tokenString string) (bool, string, string, error) {
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
 			fmt.Println("Invalid Token Signature")
-			return false, "", keyID, err
+			return
 		}
-		return false, "", keyID, err
+		return
 	}
 
 	if !token.Valid {
 		fmt.Println("Invalid Token")
-		return false, "", keyID, err
+		return
 	}
 
-	return true, claims["iss"].(string), keyID, nil
+	isValid = true
+	userId = claims["iss"].(uint)
+	return
 }
