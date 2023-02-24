@@ -32,16 +32,19 @@ func (a *AuthController) Register(c *gin.Context) {
 	var dto RegisterDto
 	if err := c.BindJSON(&dto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
 	}
 
 	mappedUser, err := MapRegisterDto(&dto)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
 	}
 
 	loginResponse, err := a.AuthService.Register(&mappedUser)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusCreated, loginResponse)
