@@ -18,11 +18,11 @@ func (u *UserService) FindById(id uint) (*User, error) {
 	return u.UserRepository.FindById(id)
 }
 
-func (u *UserService) Create(dto CreateUserDto) (*User, error) {
+func (u *UserService) Create(dto *CreateUserDto) (*User, error) {
 	return u.UserRepository.Create(MapCreateUserDto(dto))
 }
 
-func (u *UserService) Update(dto UpdateUserDto, id uint) (*User, error) {
+func (u *UserService) Update(dto *UpdateUserDto, id uint) (*User, error) {
 	return u.UserRepository.Update(MapUpdateUserDto(dto, id))
 }
 

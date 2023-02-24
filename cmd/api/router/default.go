@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	docs "gin-starter/docs"
+	"gin-starter/internal/auth"
 	"gin-starter/internal/user"
 
 	swaggerFiles "github.com/swaggo/files"
@@ -17,13 +18,17 @@ func RegisterRoutes() *gin.Engine {
 
 	router.Use(gin.Recovery())
 
-	api := router.Group("/api")
+	v1 := router.Group("/api")
 	{
-		admin := api.Group("/admin")
+		authGroup := v1.Group("/auth")
 		{
-			users := admin.Group("/users")
+			auth.RegisterRoutes(authGroup)
+		}
+		adminGroup := v1.Group("/admin")
+		{
+			usersGroup := adminGroup.Group("/users")
 			{
-				user.RegisterRoutes(users)
+				user.RegisterRoutes(usersGroup)
 			}
 		}
 	}
