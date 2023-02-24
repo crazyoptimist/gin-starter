@@ -26,6 +26,21 @@ func MapCreateUserDto(dto CreateUserDto) User {
 	}
 }
 
+type UpdateUserDto struct {
+	FirstName string `gorm:"column:first_name" json:"firstName"`
+	LastName  string `gorm:"column:last_name" json:"lastName"`
+	Email     string `gorm:"column:email" json:"email"`
+}
+
+func MapUpdateUserDto(dto UpdateUserDto, id uint) User {
+	return User{
+		Model:     common.Model{ID: id},
+		FirstName: dto.FirstName,
+		LastName:  dto.LastName,
+		Email:     dto.Email,
+	}
+}
+
 type LoginDto struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
@@ -40,7 +55,6 @@ type RegisterDto struct {
 }
 
 func MapRegisterDto(dto RegisterDto) User {
-	// TODO: generate a random passoword
 	return User{
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,

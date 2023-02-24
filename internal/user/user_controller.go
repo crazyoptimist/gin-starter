@@ -19,28 +19,6 @@ func NewUserController(db *gorm.DB) UserController {
 	return UserController{UserService: userService}
 }
 
-// Create godoc
-// @Summary Create a new user
-// @Tags users
-// @Param request body CreateUserDto true "CreateUserDto"
-// @Success 200	{array} User
-// @Failure 400 {object} utils.HTTPError
-// @Failure 500 {object} utils.HTTPError
-// @Router /admin/users [post]
-func (u *UserController) Create(c *gin.Context) {
-	var dto CreateUserDto
-	if err := c.BindJSON(&dto); err != nil {
-		utils.NewError(c, http.StatusBadRequest, err)
-	}
-
-	user, err := u.UserService.Save(MapCreateUserDto(dto))
-	if err != nil {
-		utils.NewError(c, http.StatusInternalServerError, err)
-	}
-
-	c.JSON(http.StatusCreated, user)
-}
-
 // FindAll godoc
 // @Summary Retrieves users
 // @Tags users
@@ -62,7 +40,7 @@ func (u *UserController) FindAll(c *gin.Context) {
 // @Failure 500 {object} utils.HTTPError
 // @Router /admin/users/{id} [get]
 func (u *UserController) FindById(c *gin.Context) {
-	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.NewError(c, http.StatusBadRequest, err)
 	}
@@ -74,4 +52,80 @@ func (u *UserController) FindById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, user)
+}
+
+// Create godoc
+// @Summary Create a new user
+// @Tags users
+// @Param request body CreateUserDto true "CreateUserDto"
+// @Success 201	{array} User
+// @Failure 400 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Router /admin/users [post]
+func (u *UserController) Create(c *gin.Context) {
+	var dto CreateUserDto
+	if err := c.BindJSON(&dto); err != nil {
+		utils.NewError(c, http.StatusBadRequest, err)
+	}
+
+	user, err := u.UserService.Create(dto)
+	if err != nil {
+		utils.NewError(c, http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusCreated, user)
+}
+
+// Update godoc
+// @Summary Update user
+// @Tags users
+// @Param id path integer true "User ID"
+// @Param request body CreateUserDto true "UpdateUserDto"
+// @Success 200	{array} User
+// @Failure 400 {object} utils.HTTPError
+// @Failure 404 {object} utils.HTTPError
+// @Failure 500 {object} utils.HTTPError
+// @Router /admin/users/{id} [patch]
+func (u *UserController) Update(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.NewError(c, http.StatusBadRequest, err)
+	}
+
+	if _, err := u.UserService.FindById(uint(id)); err != nil {
+		utils.NewError(c, http.StatusNotFound, err)
+	}
+
+	var dto UpdateUserDto
+	if err := c.BindJSON(&dto); err != nil {
+		utils.NewError(c, http.StatusBadRequest, err)
+	}
+
+	user, err := u.UserService.Update(dto, uint(id))
+	if err != nil {
+		utils.NewError(c, http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
+// Delete godoc
+// @Summary Delete user
+// @Tags users
+// @Param id path integer true "User ID"
+// @Success 200
+// @Failure 400 {object} utils.HTTPError
+// @Failure 404 {object} utils.HTTPError
+// @Router /admin/users/{id} [delete]
+func (u *UserController) Delete(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.NewError(c, http.StatusBadRequest, err)
+	}
+
+	if err := u.UserService.Delete(uint(id)); err != nil {
+		utils.NewError(c, http.StatusInternalServerError, err)
+	}
+
+	c.JSON(http.StatusOK, nil)
 }

@@ -1,15 +1,13 @@
 package user
 
+import "gin-starter/pkg/common"
+
 type UserService struct {
 	UserRepository IUserRepository
 }
 
 func NewUserService(repository IUserRepository) UserService {
 	return UserService{UserRepository: repository}
-}
-
-func (u *UserService) Save(user User) (*User, error) {
-	return u.UserRepository.Save(user)
 }
 
 func (u *UserService) FindAll() []User {
@@ -20,6 +18,14 @@ func (u *UserService) FindById(id uint) (*User, error) {
 	return u.UserRepository.FindById(id)
 }
 
-func (u *UserService) Delete(user User) error {
-	return u.UserRepository.Delete(user)
+func (u *UserService) Create(dto CreateUserDto) (*User, error) {
+	return u.UserRepository.Create(MapCreateUserDto(dto))
+}
+
+func (u *UserService) Update(dto UpdateUserDto, id uint) (*User, error) {
+	return u.UserRepository.Update(MapUpdateUserDto(dto, id))
+}
+
+func (u *UserService) Delete(id uint) error {
+	return u.UserRepository.Delete(User{Model: common.Model{ID: id}})
 }
