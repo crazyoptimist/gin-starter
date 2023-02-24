@@ -69,7 +69,7 @@ func (u *UserController) Create(c *gin.Context) {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 	}
 
-	user, err := u.UserService.Create(dto)
+	user, err := u.UserService.Create(&dto)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
 	}
@@ -102,7 +102,7 @@ func (u *UserController) Update(c *gin.Context) {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 	}
 
-	user, err := u.UserService.Update(dto, uint(id))
+	user, err := u.UserService.Update(&dto, uint(id))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
 	}
