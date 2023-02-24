@@ -15,7 +15,26 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/users/{id}": {
+        "/admin/users": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Retrieves users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/user.User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}": {
             "get": {
                 "tags": [
                     "users"

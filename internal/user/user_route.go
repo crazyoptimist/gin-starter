@@ -8,5 +8,6 @@ import (
 
 func RegisterRoutes(g *gin.RouterGroup) {
 	controllers := NewUserController(config.Config.DB)
+	g.GET("", controllers.FindAll)
 	g.GET(":id", controllers.FindById)
 }
