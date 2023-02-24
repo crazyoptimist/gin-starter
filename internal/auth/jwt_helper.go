@@ -15,7 +15,7 @@ const (
 
 func GenerateAccessToken(userId uint) (string, error) {
 
-	secretKey := config.Config.JwtAccessTokenSecret
+	secretKey := []byte(config.Config.JwtAccessTokenSecret)
 	expiresIn := config.Config.JwtAccessTokenExpiresIn
 
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -36,7 +36,7 @@ func GenerateAccessToken(userId uint) (string, error) {
 
 func GenerateRefreshToken(userId uint) (string, error) {
 
-	secretKey := config.Config.JwtRefreshTokenSecret
+	secretKey := []byte(config.Config.JwtRefreshTokenSecret)
 	expiresIn := config.Config.JwtRefreshTokenExpiresIn
 
 	token := jwt.New(jwt.SigningMethodHS256)
