@@ -17,13 +17,13 @@ func RegisterRoutes() *gin.Engine {
 
 	router.Use(gin.Recovery())
 
-	api := router.Group("/api")
+	v1 := router.Group("/api")
 	{
-		admin := api.Group("/admin")
+		adminGroup := v1.Group("/admin")
 		{
-			users := admin.Group("/users")
+			usersGroup := adminGroup.Group("/users")
 			{
-				user.RegisterRoutes(users)
+				user.RegisterRoutes(usersGroup)
 			}
 		}
 	}
