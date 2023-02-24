@@ -25,7 +25,7 @@ definitions:
       updated_at:
         type: string
     type: object
-  utils.HTTPError:
+  utils.ErrorResponse:
     properties:
       code:
         example: 400
@@ -49,7 +49,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
       summary: Retrieves users
       tags:
       - users
@@ -71,11 +71,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
       summary: Create a new user
       tags:
       - users
@@ -93,11 +93,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
       summary: Delete user
       tags:
       - users
@@ -116,15 +116,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
       summary: Retrieves a user by ID
       tags:
       - users
@@ -151,15 +151,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HTTPError'
+            $ref: '#/definitions/utils.ErrorResponse'
       summary: Update user
       tags:
       - users
