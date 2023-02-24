@@ -8,13 +8,18 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
+const (
+	AccessTokenKeyId = iota + 1
+	RefreshTokenKeyId
+)
+
 func GenerateAccessToken(userId uint) (string, error) {
 
 	secretKey := config.Config.JwtAccessTokenSecret
 	expiresIn := config.Config.JwtAccessTokenExpiresIn
 
 	token := jwt.New(jwt.SigningMethodHS256)
-	token.Header["kid"] = "access_token"
+	token.Header["kid"] = AccessTokenKeyId
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["iat"] = time.Now()
@@ -35,7 +40,7 @@ func GenerateRefreshToken(userId uint) (string, error) {
 	expiresIn := config.Config.JwtRefreshTokenExpiresIn
 
 	token := jwt.New(jwt.SigningMethodHS256)
-	token.Header["kid"] = "refresh_token"
+	token.Header["kid"] = RefreshTokenKeyId
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["iat"] = time.Now()
@@ -65,7 +70,7 @@ func GenerateTokenPair(userId uint) (string, string, error) {
 	return accessToken, refreshToken, nil
 }
 
-func ValidateToken(tokenString string) (isValid bool, userId uint, keyId string, err error) {
+func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, err error) {
 
 	var key []byte
 
@@ -73,12 +78,12 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId string,
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 
-		keyId = token.Header["kid"].(string)
+		keyId = token.Header["kid"].(uint)
 
 		switch keyId {
-		case "access_token":
+		case AccessTokenKeyId:
 			key = []byte(config.Config.JwtAccessTokenSecret)
-		case "refresh_token":
+		case RefreshTokenKeyId:
 			key = []byte(config.Config.JwtRefreshTokenSecret)
 		}
 
