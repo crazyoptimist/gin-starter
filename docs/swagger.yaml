@@ -62,8 +62,8 @@ paths:
         schema:
           $ref: '#/definitions/user.CreateUserDto'
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             items:
               $ref: '#/definitions/user.User'
@@ -80,6 +80,27 @@ paths:
       tags:
       - users
   /admin/users/{id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Delete user
+      tags:
+      - users
     get:
       parameters:
       - description: User ID
@@ -105,6 +126,41 @@ paths:
           schema:
             $ref: '#/definitions/utils.HTTPError'
       summary: Retrieves a user by ID
+      tags:
+      - users
+    patch:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: UpdateUserDto
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateUserDto'
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/user.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HTTPError'
+      summary: Update user
       tags:
       - users
 swagger: "2.0"
