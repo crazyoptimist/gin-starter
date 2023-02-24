@@ -21,19 +21,6 @@ func newMockUserRepository() *mockUserRepository {
 	}
 }
 
-func (r *mockUserRepository) Save(user User) (*User, error) {
-	if user.ID != 0 {
-		for i, record := range r.records {
-			if record.ID == user.ID {
-				r.records[i] = user
-				return &user, nil
-			}
-		}
-	}
-	r.records = append(r.records, user)
-	return &user, nil
-}
-
 func (r *mockUserRepository) FindAll() []User {
 	return r.records
 }
@@ -45,6 +32,21 @@ func (r *mockUserRepository) FindById(id uint) (*User, error) {
 		}
 	}
 	return nil, errors.New("not found")
+}
+
+func (r *mockUserRepository) Create(user User) (*User, error) {
+	r.records = append(r.records, user)
+	return &user, nil
+}
+
+func (r *mockUserRepository) Update(user User) (*User, error) {
+	for i, record := range r.records {
+		if record.ID == user.ID {
+			r.records[i] = user
+			return &user, nil
+		}
+	}
+	return &user, nil
 }
 
 func (r *mockUserRepository) Delete(user User) error {
