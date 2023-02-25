@@ -65,7 +65,7 @@ func (u *UserRepository) Delete(user User) error {
 func (u *UserRepository) FindByEmail(email string) (*User, error) {
 	var user User
 
-	err := u.DB.Where("email = ?", email).Find(&user).Error
+	err := u.DB.Where("email = ?", email).First(&user).Error
 
 	return &user, err
 }

@@ -35,12 +35,6 @@ func (a *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	mappedUser, err := MapRegisterDto(&dto)
-	if err != nil {
-		utils.RaiseHttpError(c, http.StatusBadRequest, err)
-		return
-	}
-
 	loginResponse, err := a.AuthService.Register(&mappedUser)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
