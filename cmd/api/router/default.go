@@ -24,7 +24,7 @@ func RegisterRoutes() *gin.Engine {
 		{
 			auth.RegisterRoutes(authGroup)
 		}
-		adminGroup := v1.Group("/admin")
+		adminGroup := v1.Group("/admin", auth.AuthMiddleware())
 		{
 			usersGroup := adminGroup.Group("/users")
 			{
