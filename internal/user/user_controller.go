@@ -44,6 +44,7 @@ func (u *UserController) FindById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
 	}
 
 	user, err := u.UserService.FindById(uint(id))
@@ -67,11 +68,13 @@ func (u *UserController) Create(c *gin.Context) {
 	var dto CreateUserDto
 	if err := c.BindJSON(&dto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
 	}
 
 	user, err := u.UserService.Create(&dto)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusCreated, user)
@@ -91,20 +94,24 @@ func (u *UserController) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
 	}
 
 	if _, err := u.UserService.FindById(uint(id)); err != nil {
 		utils.RaiseHttpError(c, http.StatusNotFound, err)
+		return
 	}
 
 	var dto UpdateUserDto
 	if err := c.BindJSON(&dto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
 	}
 
 	user, err := u.UserService.Update(&dto, uint(id))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, user)
@@ -115,17 +122,18 @@ func (u *UserController) Update(c *gin.Context) {
 // @Tags users
 // @Param id path integer true "User ID"
 // @Success 200
-// @Failure 400 {object} utils.HttpError
-// @Failure 404 {object} utils.HttpError
+// @Failure 500 {object} utils.HttpError
 // @Router /admin/users/{id} [delete]
 func (u *UserController) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
 	}
 
 	if err := u.UserService.Delete(uint(id)); err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		return
 	}
 
 	c.JSON(http.StatusOK, nil)
