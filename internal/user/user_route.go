@@ -1,9 +1,9 @@
 package user
 
 import (
-	"gin-starter/cmd/api/config"
-
 	"github.com/gin-gonic/gin"
+
+	"gin-starter/cmd/api/config"
 )
 
 func RegisterRoutes(g *gin.RouterGroup) {
