@@ -1,16 +1,42 @@
 # Gin Starter 
 
-This is a Gin boilerplate organized in a modular way.
+Gin boilerplate organized in a modular way.
 
 ## Table Of Contents
 
-## Environment Variables
+## DB Migration
 
-Create a dot env file:
+```bash
+make db_migrate
+```
+
+## Development
+
+Create a dotenv file:
 
 ```bash
 cp .env.example .env
 ```
+
+Install [air](https://github.com/cosmtrek/air) for live reloading. Air config file is already inside the repo, so simply run:
+
+```bash
+air
+```
+
+## Test
+
+```bash
+make test
+```
+
+## Build
+
+```bash
+make build_linux
+```
+
+Binaries will be generated inside `PROJECT_ROOT/bin/`
 
 ## API Documentation
 
@@ -22,13 +48,15 @@ Generate/update docs:
 
 ```bash
 go install github.com/swaggo/swag/cmd/swag@latest
-swag init
+make docs_generate
 ```
 
 ## TODO
 
-- [ ] Implement Auth
+- [ ] Write More :) Tests
 - [ ] Containerize
-- [ ] Cleanup Tests
-- [ ] Cleanup Lint, Vet
 - [ ] Setup CI/CD
+
+## License
+
+MIT
