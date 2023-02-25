@@ -43,7 +43,7 @@ func (a *AuthController) Register(c *gin.Context) {
 
 	loginResponse, err := a.AuthService.Register(&mappedUser)
 	if err != nil {
-		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 

@@ -122,8 +122,7 @@ func (u *UserController) Update(c *gin.Context) {
 // @Tags users
 // @Param id path integer true "User ID"
 // @Success 200
-// @Failure 400 {object} utils.HttpError
-// @Failure 404 {object} utils.HttpError
+// @Failure 500 {object} utils.HttpError
 // @Router /admin/users/{id} [delete]
 func (u *UserController) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))

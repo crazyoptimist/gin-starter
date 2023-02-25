@@ -1,6 +1,9 @@
 package user
 
-import "gin-starter/pkg/common"
+import (
+	"gin-starter/pkg/common"
+	"gin-starter/pkg/utils"
+)
 
 type User struct {
 	common.Model
@@ -13,16 +16,18 @@ type User struct {
 type CreateUserDto struct {
 	FirstName string `gorm:"column:first_name" json:"firstName"`
 	LastName  string `gorm:"column:last_name" json:"lastName"`
-	Email     string `gorm:"column:email" json:"email"`
+	Email     string `gorm:"column:email" json:"email" binding:"required,email"`
 }
 
 func MapCreateUserDto(dto *CreateUserDto) User {
 	// TODO: generate a random passoword
+	password, _ := utils.HashPassword("must**reset")
+
 	return User{
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
 		Email:     dto.Email,
-		Password:  "you**must**reset**it**at**the**first**login",
+		Password:  password,
 	}
 }
 

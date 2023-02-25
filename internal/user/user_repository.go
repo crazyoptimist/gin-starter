@@ -61,3 +61,11 @@ func (u *UserRepository) Update(user User) (*User, error) {
 func (u *UserRepository) Delete(user User) error {
 	return u.DB.Delete(&user).Error
 }
+
+func (u *UserRepository) FindByEmail(email string) (*User, error) {
+	var user User
+
+	err := u.DB.Where("email = ?", email).Find(&user).Error
+
+	return &user, err
+}
