@@ -9,4 +9,5 @@ import (
 func RegisterRoutes(g *gin.RouterGroup) {
 	controllers := NewAuthController(config.Config.DB)
 	g.POST("/register", controllers.Register)
+	g.POST("/login", controllers.Login)
 }

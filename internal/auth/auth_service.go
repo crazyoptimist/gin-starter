@@ -43,8 +43,22 @@ func (s *AuthService) Register(dto *RegisterDto) (*LoginResponse, error) {
 	return &LoginResponse{accessToken, refreshToken}, nil
 }
 
-func (s *AuthService) Login() (*LoginResponse, error) {
-	return &LoginResponse{}, nil
+func (s *AuthService) Login(dto *LoginDto) (*LoginResponse, error) {
+	user, err := s.UserRepository.FindByEmail(dto.Email)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := utils.VerifyPassword(user.Password, dto.Password); err != nil {
+		return nil, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid password"}
+	}
+
+	accessToken, refreshToken, err := GenerateTokenPair(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &LoginResponse{accessToken, refreshToken}, nil
 }
 
 func (s *AuthService) Logout() {

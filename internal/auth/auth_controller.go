@@ -35,9 +35,34 @@ func (a *AuthController) Register(c *gin.Context) {
 		return
 	}
 
-	loginResponse, err := a.AuthService.Register(&mappedUser)
+	loginResponse, err := a.AuthService.Register(&dto)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, loginResponse)
+}
+
+// Login godoc
+// @Summary Login user
+// @Tags auth
+// @Param request body LoginDto true "LoginDto"
+// @Success 201	{array} LoginResponse
+// @Failure 400 {object} utils.HttpError
+// @Failure 401 {object} utils.HttpError
+// @Failure 404 {object} utils.HttpError
+// @Router /auth/login [post]
+func (a *AuthController) Login(c *gin.Context) {
+	var dto LoginDto
+	if err := c.BindJSON(&dto); err != nil {
+		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		return
+	}
+
+	loginResponse, err := a.AuthService.Login(&dto)
+	if err != nil {
+		utils.RaiseHttpError(c, http.StatusUnauthorized, err)
 		return
 	}
 
