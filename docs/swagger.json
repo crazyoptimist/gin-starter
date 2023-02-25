@@ -6,6 +6,11 @@
     "paths": {
         "/admin/users": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -29,6 +34,11 @@
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -71,6 +81,11 @@
         },
         "/admin/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -112,6 +127,11 @@
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -138,6 +158,11 @@
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],

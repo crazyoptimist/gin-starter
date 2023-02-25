@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/admin/users": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -40,6 +45,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -82,6 +92,11 @@ const docTemplate = `{
         },
         "/admin/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -123,6 +138,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
@@ -149,6 +169,11 @@ const docTemplate = `{
                 }
             },
             "patch": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "tags": [
                     "users"
                 ],
