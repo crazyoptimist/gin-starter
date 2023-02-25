@@ -62,5 +62,6 @@ func (s *AuthService) Login(dto *LoginDto) (*LoginResponse, error) {
 }
 
 func (s *AuthService) Logout() {
+	// TODO: Implement it
 	return
 }

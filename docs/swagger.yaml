@@ -86,6 +86,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.HttpError'
+      security:
+      - JWT: []
       summary: Retrieves users
       tags:
       - users
@@ -112,6 +114,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.HttpError'
+      security:
+      - JWT: []
       summary: Create a new user
       tags:
       - users
@@ -130,6 +134,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.HttpError'
+      security:
+      - JWT: []
       summary: Delete user
       tags:
       - users
@@ -157,6 +163,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.HttpError'
+      security:
+      - JWT: []
       summary: Retrieves a user by ID
       tags:
       - users
@@ -192,6 +200,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.HttpError'
+      security:
+      - JWT: []
       summary: Update user
       tags:
       - users

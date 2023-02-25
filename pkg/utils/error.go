@@ -3,7 +3,7 @@ package utils
 import "github.com/gin-gonic/gin"
 
 func RaiseHttpError(ctx *gin.Context, status int, err error) {
-	ctx.JSON(status, HttpError{
+	ctx.AbortWithStatusJSON(status, HttpError{
 		Code:    status,
 		Message: err.Error(),
 	})
