@@ -23,7 +23,8 @@ func GenerateAccessToken(userId uint) (string, error) {
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["iat"] = time.Now()
-	claims["exp"] = time.Now().Add(expiresIn * time.Second)
+	claims["exp"] = time.Now().Add(expiresIn)
+	fmt.Println(claims)
 	claims["iss"] = userId
 
 	accessToken, err := token.SignedString(secretKey)
@@ -44,7 +45,7 @@ func GenerateRefreshToken(userId uint) (string, error) {
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["iat"] = time.Now()
-	claims["exp"] = time.Now().Add(expiresIn * time.Second)
+	claims["exp"] = time.Now().Add(expiresIn)
 	claims["iss"] = userId
 
 	refreshToken, err := token.SignedString(secretKey)
