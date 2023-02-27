@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	AccessTokenKeyId = iota + 1
+	AccessTokenKeyId uint = iota + 1
 	RefreshTokenKeyId
 )
 
@@ -79,7 +79,7 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 
-		keyId = token.Header["kid"].(uint)
+		keyId = uint(token.Header["kid"].(float64))
 
 		switch keyId {
 		case AccessTokenKeyId:
