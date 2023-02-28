@@ -32,5 +32,8 @@ jobs:
     - name: Unit Test ${{ matrix.go }}
       run: make test
 
+    - name: Go Vet
+      run: make vet
+
     - name: Build
-      run: make build_linux
+      run: make build
