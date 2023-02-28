@@ -55,9 +55,7 @@ make docs_generate
 
 ## TODO
 
-- [ ] Write More :D Tests
 - [ ] Containerize
-- [ ] Setup CI/CD
 - [ ] Configure logger using zap
 
 ## License
