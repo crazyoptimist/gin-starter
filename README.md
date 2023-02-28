@@ -35,7 +35,7 @@ make test
 ## Build
 
 ```bash
-make build_linux
+make build
 ```
 
 Binaries will be generated inside `PROJECT_ROOT/bin/`

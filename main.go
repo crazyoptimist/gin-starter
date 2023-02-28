@@ -15,8 +15,9 @@ import (
 
 func main() {
 	if err := config.LoadConfig(".env"); err != nil {
-		panic(fmt.Errorf("Error while loading env file: %s", err))
+		fmt.Println("Warning: dotenv file is missing, please make sure you have configured environment variables properly", err)
 	}
+
 	config.ConnectDB()
 
 	r := router.RegisterRoutes()
