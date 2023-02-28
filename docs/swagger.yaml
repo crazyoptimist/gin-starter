@@ -263,4 +263,9 @@ paths:
       summary: Register new user
       tags:
       - auth
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
