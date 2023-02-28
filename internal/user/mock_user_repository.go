@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+
 	"gin-starter/pkg/common"
 	"gin-starter/pkg/utils"
 )

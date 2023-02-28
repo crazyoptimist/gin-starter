@@ -2,13 +2,12 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	docs "gin-starter/docs"
 	"gin-starter/internal/auth"
 	"gin-starter/internal/user"
-
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func RegisterRoutes() *gin.Engine {

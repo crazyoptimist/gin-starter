@@ -2,14 +2,17 @@ package auth
 
 import (
 	"fmt"
-	"gin-starter/cmd/api/config"
+	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
+
+	"gin-starter/cmd/api/config"
+	"gin-starter/pkg/utils"
 )
 
 const (
-	AccessTokenKeyId = iota + 1
+	AccessTokenKeyId uint = iota + 1
 	RefreshTokenKeyId
 )
 
@@ -22,8 +25,9 @@ func GenerateAccessToken(userId uint) (string, error) {
 	token.Header["kid"] = AccessTokenKeyId
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["iat"] = time.Now()
-	claims["exp"] = time.Now().Add(expiresIn * time.Second)
+	issuedAt := time.Now()
+	claims["iat"] = issuedAt.Unix()
+	claims["exp"] = issuedAt.Add(expiresIn).Unix()
 	claims["iss"] = userId
 
 	accessToken, err := token.SignedString(secretKey)
@@ -43,8 +47,9 @@ func GenerateRefreshToken(userId uint) (string, error) {
 	token.Header["kid"] = RefreshTokenKeyId
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["iat"] = time.Now()
-	claims["exp"] = time.Now().Add(expiresIn * time.Second)
+	issuedAt := time.Now()
+	claims["iat"] = issuedAt.Unix()
+	claims["exp"] = issuedAt.Add(expiresIn).Unix()
 	claims["iss"] = userId
 
 	refreshToken, err := token.SignedString(secretKey)
@@ -78,7 +83,7 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 
-		keyId = token.Header["kid"].(uint)
+		keyId = uint(token.Header["kid"].(float64))
 
 		switch keyId {
 		case AccessTokenKeyId:
@@ -92,18 +97,22 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			fmt.Println("Invalid Token Signature")
+			fmt.Println(err)
 			return
 		}
+		fmt.Println(err)
 		return
 	}
 
 	if !token.Valid {
+		err = &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid Token"}
 		fmt.Println("Invalid Token")
 		return
 	}
 
 	isValid = true
-	userId = claims["iss"].(uint)
+
+	userId = uint(claims["iss"].(float64))
+
 	return
 }
