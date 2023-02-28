@@ -2,10 +2,13 @@ package auth
 
 import (
 	"fmt"
-	"gin-starter/cmd/api/config"
+	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v5"
+
+	"gin-starter/cmd/api/config"
+	"gin-starter/pkg/utils"
 )
 
 const (
@@ -22,9 +25,9 @@ func GenerateAccessToken(userId uint) (string, error) {
 	token.Header["kid"] = AccessTokenKeyId
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["iat"] = time.Now()
-	claims["exp"] = time.Now().Add(expiresIn)
-	fmt.Println(claims)
+	issuedAt := time.Now()
+	claims["iat"] = issuedAt.Unix()
+	claims["exp"] = issuedAt.Add(expiresIn).Unix()
 	claims["iss"] = userId
 
 	accessToken, err := token.SignedString(secretKey)
@@ -44,8 +47,9 @@ func GenerateRefreshToken(userId uint) (string, error) {
 	token.Header["kid"] = RefreshTokenKeyId
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["iat"] = time.Now()
-	claims["exp"] = time.Now().Add(expiresIn)
+	issuedAt := time.Now()
+	claims["iat"] = issuedAt.Unix()
+	claims["exp"] = issuedAt.Add(expiresIn).Unix()
 	claims["iss"] = userId
 
 	refreshToken, err := token.SignedString(secretKey)
@@ -93,6 +97,7 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
+			fmt.Println(err)
 			return
 		}
 		fmt.Println(err)
@@ -100,11 +105,14 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 	}
 
 	if !token.Valid {
+		err = &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid Token"}
 		fmt.Println("Invalid Token")
 		return
 	}
 
 	isValid = true
-	userId = claims["iss"].(uint)
+
+	userId = uint(claims["iss"].(float64))
+
 	return
 }
