@@ -2,6 +2,8 @@
 
 Gin boilerplate organized in a modular way.
 
+[![Build & Test](https://github.com/crazyoptimist/gin-starter/actions/workflows/test.yml/badge.svg)](https://github.com/crazyoptimist/gin-starter/actions/workflows/test.yml)
+
 ## Table Of Contents
 
 ## DB Migration
