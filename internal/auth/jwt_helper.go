@@ -93,9 +93,9 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			fmt.Println("Invalid Token Signature")
 			return
 		}
+		fmt.Println(err)
 		return
 	}
 
