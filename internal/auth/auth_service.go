@@ -1,9 +1,10 @@
 package auth
 
 import (
+	"net/http"
+
 	"gin-starter/internal/user"
 	"gin-starter/pkg/utils"
-	"net/http"
 )
 
 type AuthService struct {
