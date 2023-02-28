@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gin-starter/cmd/api/config"
+	"gin-starter/internal/core/config"
 	"gin-starter/internal/user"
 )
 

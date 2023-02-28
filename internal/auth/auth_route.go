@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"gin-starter/cmd/api/config"
+	"gin-starter/internal/core/config"
 
 	"github.com/gin-gonic/gin"
 )

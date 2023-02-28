@@ -1,7 +1,7 @@
 test:
 	go test -v ./...
 db_migrate:
-	go run ./cmd/api/migration/main.go
+	go run ./cmd/api/migrate/default.go
 docs_generate:
 	rm -rf docs/* && swag init
 build_linux:

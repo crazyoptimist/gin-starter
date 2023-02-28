@@ -7,7 +7,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	"gin-starter/cmd/api/config"
+	"gin-starter/internal/core/config"
 	"gin-starter/pkg/utils"
 )
 

@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gin-starter/cmd/api/config"
+	"gin-starter/internal/core/config"
 )
 
 func TestGenerateAccessToken(t *testing.T) {

@@ -3,7 +3,7 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 
-	"gin-starter/cmd/api/config"
+	"gin-starter/internal/core/config"
 )
 
 func RegisterRoutes(g *gin.RouterGroup) {
