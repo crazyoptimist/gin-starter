@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/spf13/viper"
@@ -31,7 +30,7 @@ func LoadConfig(configFile string) error {
 	v.SetDefault("SERVER_PORT", 8080)
 
 	if err := v.ReadInConfig(); err != nil {
-		return fmt.Errorf("failed to read the configuration file: %s", err)
+		return err
 	}
 
 	return v.Unmarshal(&Config)

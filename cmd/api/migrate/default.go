@@ -1,15 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"log"
+
 	"gin-starter/internal/core/config"
 	"gin-starter/internal/user"
 )
 
 func main() {
 	if err := config.LoadConfig(".env"); err != nil {
-		panic(fmt.Errorf("invalid application configuration: %s", err))
+		log.Println("Warning: dotenv file is missing, please make sure you have configured environment variables properly", err)
 	}
-	config.ConnectDB()
-	config.Config.DB.AutoMigrate(&user.User{})
+
+	if err := config.ConnectDB(); err != nil {
+		log.Fatalln("Error: database connection failed: ", err)
+	}
+
+	if err := config.Config.DB.AutoMigrate(&user.User{}); err != nil {
+		log.Fatalln("Database migration failed: ", err)
+	}
 }

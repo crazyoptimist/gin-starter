@@ -1,13 +1,13 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 
 	"gin-starter/internal/core/config"
+	"gin-starter/internal/core/logger"
 	"gin-starter/pkg/utils"
 )
 
@@ -97,16 +97,16 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			fmt.Println(err)
+			logger.Logger.Info(err)
 			return
 		}
-		fmt.Println(err)
+		logger.Logger.Info(err)
 		return
 	}
 
 	if !token.Valid {
 		err = &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid Token"}
-		fmt.Println("Invalid Token")
+		logger.Logger.Info("Invalid Token")
 		return
 	}
 

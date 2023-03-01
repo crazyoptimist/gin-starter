@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -9,6 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"gin-starter/internal/core/config"
+	"gin-starter/internal/core/logger"
 	"gin-starter/pkg/utils"
 )
 
@@ -16,7 +16,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			fmt.Println("Authorization header is missing")
+			logger.Logger.Info("Authorization header is missing")
 			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Authorization token is required"})
 			return
 		}
@@ -27,14 +27,14 @@ func AuthMiddleware() gin.HandlerFunc {
 		if len(tokenSplit) == 2 {
 			accessToken = strings.TrimSpace(tokenSplit[1])
 		} else {
-			fmt.Println("Incorrect format of auth header")
+			logger.Logger.Info("Incorrect format of auth header")
 			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token format"})
 			return
 		}
 
 		// TODO: implement blacklist for logout
 		// if IsBlacklisted(accessToken) {
-		// 	fmt.Println("Found in Blacklist")
+		// 	logger.Logger.Info("Found in Blacklist")
 		// 	utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token"})
 		// 	return
 		// }
@@ -46,7 +46,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		if err != nil {
 			if err == jwt.ErrSignatureInvalid {
-				fmt.Println("Invalid Token Signature")
+				logger.Logger.Info("Invalid Token Signature")
 				utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token signature"})
 				return
 			}
@@ -55,12 +55,12 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		if !parsedToken.Valid {
-			fmt.Println("Invalid Token")
+			logger.Logger.Info("Invalid Token")
 			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token"})
 			return
 		}
 
-		// TODO: c.Set("user", user) huh?
+		// TODO: c.Set("user", user) ??
 
 		c.Next()
 	}

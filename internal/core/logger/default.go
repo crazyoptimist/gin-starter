@@ -14,9 +14,7 @@ type appLogger struct {
 }
 
 func InitAppLogger() (*appLogger, error) {
-
 	config := zap.NewProductionConfig()
-
 	config.EncoderConfig.TimeKey = "timestamp"
 	config.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.RFC3339)
 
