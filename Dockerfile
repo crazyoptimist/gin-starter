@@ -1,10 +1,15 @@
-# syntax=docker/dockerfile:1
-
 ##
 ## STEP 1 - BUILD
 ##
 
 FROM golang:1.20 as builder
+
+ARG USERNAME=iamuser
+ARG USER_UID=1001
+ARG USER_GID=$USER_UID
+
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
 
 ENV APP_HOME /source
 
@@ -29,6 +34,10 @@ FROM scratch
 COPY --from=builder /source/bin/app /app
 
 COPY .env /.env
+
+COPY --from=builder /etc/passwd /etc/passwd
+
+USER 1001
 
 EXPOSE 8080
 
