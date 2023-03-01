@@ -1,6 +1,8 @@
 package user
 
-import "gin-starter/pkg/common"
+import (
+	"gin-starter/pkg/common"
+)
 
 type UserService struct {
 	UserRepository IUserRepository

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"gin-starter/internal/core/config"
+	"gin-starter/internal/core/logger"
 	"gin-starter/internal/core/router"
 )
 
@@ -19,11 +20,14 @@ import (
 // @name                        Authorization
 
 func main() {
+
 	if err := config.LoadConfig(".env"); err != nil {
 		log.Println("Warning: dotenv file is missing, please make sure you have configured environment variables properly", err)
 	}
 
 	config.ConnectDB()
+
+	logger.InitAppLogger()
 
 	r := router.RegisterRoutes()
 	router.SetupSwagger(r)
@@ -40,7 +44,7 @@ func main() {
 	}()
 
 	// Graceful shutdown
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 	log.Println("Shutdown Server ...")
