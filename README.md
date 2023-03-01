@@ -53,11 +53,6 @@ go install github.com/swaggo/swag/cmd/swag@latest
 make docs_generate
 ```
 
-## TODO
-
-- [ ] Containerize
-- [ ] Configure logger using zap
-
 ## License
 
 MIT
