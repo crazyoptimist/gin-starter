@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/spf13/viper"
@@ -38,10 +37,12 @@ func LoadConfig(configFile string) error {
 	return v.Unmarshal(&Config)
 }
 
-func ConnectDB() {
-	var dbErr error
-	Config.DB, dbErr = gorm.Open(postgres.Open(Config.DSN), &gorm.Config{})
-	if dbErr != nil {
-		log.Fatalln("Database connection failed: ", dbErr)
+func ConnectDB() error {
+	db, err := gorm.Open(postgres.Open(Config.DSN), &gorm.Config{})
+	if err != nil {
+		return err
 	}
+
+	Config.DB = db
+	return nil
 }

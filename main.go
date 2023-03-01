@@ -25,9 +25,15 @@ func main() {
 		log.Println("Warning: dotenv file is missing, please make sure you have configured environment variables properly", err)
 	}
 
-	config.ConnectDB()
+	if err := config.ConnectDB(); err != nil {
+		log.Fatalln("Error: database connection failed: ", err)
+	}
 
-	logger.InitAppLogger()
+	appLogger, err := logger.InitAppLogger()
+	if err != nil {
+		log.Fatalln("Error: logger initialization failed: ", err)
+	}
+	defer appLogger.Instance.Sync()
 
 	r := router.RegisterRoutes()
 	router.SetupSwagger(r)

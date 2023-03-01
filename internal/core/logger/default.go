@@ -13,7 +13,7 @@ type appLogger struct {
 	Instance *zap.SugaredLogger
 }
 
-func InitAppLogger() {
+func InitAppLogger() (*appLogger, error) {
 
 	config := zap.NewProductionConfig()
 
@@ -21,11 +21,16 @@ func InitAppLogger() {
 	config.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout(time.RFC3339)
 
 	// Because we want to see the actual caller, we skip caller's call stack depth by one
-	logger, _ := config.Build(zap.AddCallerSkip(1))
+	logger, err := config.Build(zap.AddCallerSkip(1))
+	if err != nil {
+		return nil, err
+	}
 
 	sugar := logger.Sugar()
 
 	Logger = appLogger{Instance: sugar}
+
+	return &Logger, err
 }
 
 func (l *appLogger) Info(data interface{}) {
