@@ -22,7 +22,7 @@ import (
 func main() {
 
 	if err := config.LoadConfig(".env"); err != nil {
-		log.Println("Warning: dotenv file is missing, please make sure you have configured environment variables properly", err)
+		log.Fatalln(`Please make sure dotenv file exists or env variable TWELVE_FACTOR_MODE is set to "true": `, err)
 	}
 
 	if err := config.ConnectDB(); err != nil {

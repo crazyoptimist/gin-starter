@@ -1,6 +1,7 @@
 package config
 
 import (
+	"os"
 	"time"
 
 	"github.com/spf13/viper"
@@ -13,9 +14,8 @@ var Config appConfig
 type appConfig struct {
 	DB *gorm.DB
 
-	ServerPort int    `mapstructure:"SERVER_PORT"`
-	DSN        string `mapstructure:"DSN"`
-
+	ServerPort               int           `mapstructure:"SERVER_PORT"`
+	DSN                      string        `mapstructure:"DSN"`
 	JwtAccessTokenSecret     string        `mapstructure:"JWT_ACCESS_TOKEN_SECRET"`
 	JwtRefreshTokenSecret    string        `mapstructure:"JWT_REFRESH_TOKEN_SECRET"`
 	JwtAccessTokenExpiresIn  time.Duration `mapstructure:"JWT_ACCESS_TOKEN__EXPIRES_IN"`
@@ -24,10 +24,22 @@ type appConfig struct {
 
 func LoadConfig(configFile string) error {
 	v := viper.New()
-	v.SetConfigFile(configFile)
-	v.AutomaticEnv()
 
 	v.SetDefault("SERVER_PORT", 8080)
+
+	// Enable twelve-factor methodology
+	if os.Getenv("TWELVE_FACTOR_MODE") == "true" {
+		v.AutomaticEnv()
+		v.BindEnv("DSN")
+		v.BindEnv("JWT_ACCESS_TOKEN_SECRET")
+		v.BindEnv("JWT_REFRESH_TOKEN_SECRET")
+		v.BindEnv("JWT_ACCESS_TOKEN__EXPIRES_IN")
+		v.BindEnv("JWT_REFRESH_TOKEN_EXPIRES_IN")
+
+		return v.Unmarshal(&Config)
+	}
+
+	v.SetConfigFile(configFile)
 
 	if err := v.ReadInConfig(); err != nil {
 		return err
