@@ -13,8 +13,10 @@ bin
 .tmp
 
 # Dot env file
-*.env
-!test.env
+**/.env.*
+**/*.env
+!.env.example
+!.env.test
 
 # 3rd party dependencies
 vendor

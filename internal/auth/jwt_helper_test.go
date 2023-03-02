@@ -10,7 +10,7 @@ import (
 
 func TestGenerateAccessToken(t *testing.T) {
 
-	if err := config.LoadConfig("../../test.env"); err != nil {
+	if err := config.LoadConfig("../../.env.test"); err != nil {
 		panic("Failed to load test env file")
 	}
 

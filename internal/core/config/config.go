@@ -39,6 +39,7 @@ func LoadConfig(configFile string) error {
 		return v.Unmarshal(&Config)
 	}
 
+	v.SetConfigType("env")
 	v.SetConfigFile(configFile)
 
 	if err := v.ReadInConfig(); err != nil {
