@@ -1,9 +1,9 @@
-package auth
+package dto
 
 import (
 	"net/http"
 
-	"gin-starter/internal/user"
+	"gin-starter/internal/model"
 	"gin-starter/pkg/utils"
 )
 
@@ -25,12 +25,12 @@ type RegisterDto struct {
 	PasswordConfirmation string `json:"passwordConfirmation" binding:"required"`
 }
 
-func MapRegisterDto(dto *RegisterDto) (user.User, error) {
+func MapRegisterDto(dto *RegisterDto) (model.User, error) {
 	if dto.Password != dto.PasswordConfirmation {
-		return user.User{}, &utils.HttpError{Code: http.StatusBadRequest, Message: "Password mismatched"}
+		return model.User{}, &utils.HttpError{Code: http.StatusBadRequest, Message: "Password mismatched"}
 	}
 
-	return user.User{
+	return model.User{
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
 		Email:     dto.Email,

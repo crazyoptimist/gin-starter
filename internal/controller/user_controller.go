@@ -1,4 +1,4 @@
-package user
+package controller
 
 import (
 	"net/http"
@@ -7,17 +7,30 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
+	"gin-starter/internal/dto"
+	"gin-starter/internal/repository"
+	"gin-starter/internal/service"
 	"gin-starter/pkg/utils"
 )
 
-type UserController struct {
-	UserService UserService
+type UserController interface {
+	FindAll(c *gin.Context)
+	FindById(c *gin.Context)
+	Create(c *gin.Context)
+	Update(c *gin.Context)
+	Delete(c *gin.Context)
 }
 
+type userController struct {
+	UserService service.UserService
+}
+
+var _ UserController = (*userController)(nil)
+
 func NewUserController(db *gorm.DB) UserController {
-	userRepository := NewUserRepository(db)
-	userService := NewUserService(userRepository)
-	return UserController{UserService: userService}
+	userRepository := repository.NewUserRepository(db)
+	userService := service.NewUserService(userRepository)
+	return &userController{UserService: userService}
 }
 
 // FindAll godoc
@@ -27,7 +40,7 @@ func NewUserController(db *gorm.DB) UserController {
 // @Failure 500 {object} utils.HttpError
 // @Router /admin/users [get]
 // @Security JWT
-func (u *UserController) FindAll(c *gin.Context) {
+func (u *userController) FindAll(c *gin.Context) {
 	users := u.UserService.FindAll()
 	c.JSON(http.StatusOK, users)
 }
@@ -42,7 +55,7 @@ func (u *UserController) FindAll(c *gin.Context) {
 // @Failure 500 {object} utils.HttpError
 // @Router /admin/users/{id} [get]
 // @Security JWT
-func (u *UserController) FindById(c *gin.Context) {
+func (u *userController) FindById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
@@ -67,14 +80,14 @@ func (u *UserController) FindById(c *gin.Context) {
 // @Failure 500 {object} utils.HttpError
 // @Router /admin/users [post]
 // @Security JWT
-func (u *UserController) Create(c *gin.Context) {
-	var dto CreateUserDto
-	if err := c.BindJSON(&dto); err != nil {
+func (u *userController) Create(c *gin.Context) {
+	var createUserDto dto.CreateUserDto
+	if err := c.BindJSON(&createUserDto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
-	user, err := u.UserService.Create(&dto)
+	user, err := u.UserService.Create(&createUserDto)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
@@ -94,7 +107,7 @@ func (u *UserController) Create(c *gin.Context) {
 // @Failure 500 {object} utils.HttpError
 // @Router /admin/users/{id} [patch]
 // @Security JWT
-func (u *UserController) Update(c *gin.Context) {
+func (u *userController) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
@@ -106,13 +119,13 @@ func (u *UserController) Update(c *gin.Context) {
 		return
 	}
 
-	var dto UpdateUserDto
-	if err := c.BindJSON(&dto); err != nil {
+	var updateUserDto dto.UpdateUserDto
+	if err := c.BindJSON(&updateUserDto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
-	user, err := u.UserService.Update(&dto, uint(id))
+	user, err := u.UserService.Update(&updateUserDto, uint(id))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
@@ -129,7 +142,7 @@ func (u *UserController) Update(c *gin.Context) {
 // @Failure 500 {object} utils.HttpError
 // @Router /admin/users/{id} [delete]
 // @Security JWT
-func (u *UserController) Delete(c *gin.Context) {
+func (u *userController) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)

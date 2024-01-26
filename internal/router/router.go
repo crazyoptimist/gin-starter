@@ -6,8 +6,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	docs "gin-starter/docs"
-	"gin-starter/internal/auth"
-	"gin-starter/internal/user"
+	"gin-starter/internal/middleware"
 )
 
 func RegisterRoutes() *gin.Engine {
@@ -21,13 +20,13 @@ func RegisterRoutes() *gin.Engine {
 	{
 		authGroup := v1.Group("/auth")
 		{
-			auth.RegisterRoutes(authGroup)
+			RegisterAuthRoutes(authGroup)
 		}
-		adminGroup := v1.Group("/admin", auth.AuthMiddleware())
+		adminGroup := v1.Group("/admin", middleware.AuthMiddleware())
 		{
 			usersGroup := adminGroup.Group("/users")
 			{
-				user.RegisterRoutes(usersGroup)
+				RegisterUserRoutes(usersGroup)
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-package auth
+package controller
 
 import (
 	"net/http"
@@ -6,18 +6,27 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"gin-starter/internal/user"
+	"gin-starter/internal/dto"
+	"gin-starter/internal/repository"
+	"gin-starter/internal/service"
 	"gin-starter/pkg/utils"
 )
 
-type AuthController struct {
-	AuthService AuthService
+type AuthController interface {
+	Register(c *gin.Context)
+	Login(c *gin.Context)
 }
 
+type authController struct {
+	AuthService service.AuthService
+}
+
+var _ AuthController = (*authController)(nil)
+
 func NewAuthController(db *gorm.DB) AuthController {
-	userRepository := user.NewUserRepository(db)
-	authService := NewAuthService(userRepository)
-	return AuthController{AuthService: authService}
+	userRepository := repository.NewUserRepository(db)
+	authService := service.NewAuthService(userRepository)
+	return &authController{AuthService: authService}
 }
 
 // Register godoc
@@ -28,14 +37,14 @@ func NewAuthController(db *gorm.DB) AuthController {
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
 // @Router /auth/register [post]
-func (a *AuthController) Register(c *gin.Context) {
-	var dto RegisterDto
-	if err := c.BindJSON(&dto); err != nil {
+func (a *authController) Register(c *gin.Context) {
+	var registerDto dto.RegisterDto
+	if err := c.BindJSON(&registerDto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
-	loginResponse, err := a.AuthService.Register(&dto)
+	loginResponse, err := a.AuthService.Register(&registerDto)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
@@ -53,14 +62,14 @@ func (a *AuthController) Register(c *gin.Context) {
 // @Failure 401 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
 // @Router /auth/login [post]
-func (a *AuthController) Login(c *gin.Context) {
-	var dto LoginDto
-	if err := c.BindJSON(&dto); err != nil {
+func (a *authController) Login(c *gin.Context) {
+	var loginDto dto.LoginDto
+	if err := c.BindJSON(&loginDto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
-	loginResponse, err := a.AuthService.Login(&dto)
+	loginResponse, err := a.AuthService.Login(&loginDto)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusUnauthorized, err)
 		return

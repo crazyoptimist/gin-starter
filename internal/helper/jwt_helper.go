@@ -1,4 +1,4 @@
-package auth
+package helper
 
 import (
 	"net/http"
@@ -6,8 +6,8 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 
-	"gin-starter/internal/core/config"
-	"gin-starter/internal/core/logger"
+	"gin-starter/internal/config"
+	"gin-starter/internal/logger"
 	"gin-starter/pkg/utils"
 )
 

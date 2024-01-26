@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"gin-starter/internal/core/config"
-	"gin-starter/internal/user"
+	"gin-starter/internal/config"
+	"gin-starter/internal/model"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 		log.Fatalln("Error: database connection failed: ", err)
 	}
 
-	if err := config.Config.DB.AutoMigrate(&user.User{}); err != nil {
+	if err := config.Config.DB.AutoMigrate(&model.User{}); err != nil {
 		log.Fatalln("Database migration failed: ", err)
 	}
 }

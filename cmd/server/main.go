@@ -9,12 +9,12 @@ import (
 	"os/signal"
 	"time"
 
-	"gin-starter/internal/core/config"
-	"gin-starter/internal/core/logger"
-	"gin-starter/internal/core/router"
+	"gin-starter/internal/config"
+	"gin-starter/internal/logger"
+	"gin-starter/internal/router"
 )
 
-// We are not using an API key here, but in OpenAPI v2 there is no better way to configure this.
+// We don't use API key, but in OpenAPI v2 there's no better way to configure this.
 // @securityDefinitions.apikey  JWT
 // @in                          header
 // @name                        Authorization

@@ -1,19 +1,17 @@
-package user
+package service_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	"gin-starter/internal/repository"
+	"gin-starter/internal/service"
 )
 
-func TestNewUserService(t *testing.T) {
-	repository := newMockUserRepository()
-	s := NewUserService(repository)
-	assert.Equal(t, repository, s.UserRepository)
-}
-
 func TestFindById(t *testing.T) {
-	userService := NewUserService(newMockUserRepository())
+	userRepository := repository.NewMockUserRepository()
+	userService := service.NewUserService(userRepository)
 
 	t.Run("it should return error for not existing id", func(t *testing.T) {
 		_, err := userService.FindById(100)

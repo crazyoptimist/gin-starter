@@ -1,11 +1,11 @@
-package auth
+package helper
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"gin-starter/internal/core/config"
+	"gin-starter/internal/config"
 )
 
 func TestGenerateAccessToken(t *testing.T) {
