@@ -5,7 +5,7 @@ services:
     container_name: gin-api
     build:
       context: ../
-      dockerfile: ./prod.Dockerfile
+      dockerfile: ./deployments/prod.Dockerfile
     ports:
       - "8080:8080"
     restart: unless-stopped
