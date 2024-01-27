@@ -75,6 +75,7 @@ func GenerateTokenPair(userId uint) (string, string, error) {
 	return accessToken, refreshToken, nil
 }
 
+// This func will be used when inviting new users, etc.
 func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, err error) {
 
 	var key []byte
@@ -100,13 +101,11 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 			logger.Logger.Info(err)
 			return
 		}
-		logger.Logger.Info(err)
 		return
 	}
 
 	if !token.Valid {
 		err = &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid Token"}
-		logger.Logger.Info("Invalid Token")
 		return
 	}
 
