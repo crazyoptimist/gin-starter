@@ -33,7 +33,8 @@ FROM scratch
 
 COPY --from=builder /source/bin/server /server
 
-ENV TWELVE_FACTOR_MODE true
+ENV GIN_MODE=release
+ENV TWELVE_FACTOR_MODE=true
 
 COPY --from=builder /etc/passwd /etc/passwd
 

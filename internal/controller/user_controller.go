@@ -36,7 +36,7 @@ func NewUserController(db *gorm.DB) UserController {
 // FindAll godoc
 // @Summary Retrieves users
 // @Tags users
-// @Success 200	{array} User
+// @Success 200	{array} model.User
 // @Failure 500 {object} utils.HttpError
 // @Router /admin/users [get]
 // @Security JWT
@@ -49,7 +49,7 @@ func (u *userController) FindAll(c *gin.Context) {
 // @Summary Retrieves a user by ID
 // @Tags users
 // @Param id path integer true "User ID"
-// @Success 200	{object} User
+// @Success 200	{object} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
@@ -74,8 +74,8 @@ func (u *userController) FindById(c *gin.Context) {
 // Create godoc
 // @Summary Create a new user
 // @Tags users
-// @Param request body CreateUserDto true "CreateUserDto"
-// @Success 201	{array} User
+// @Param request body dto.CreateUserDto true "CreateUserDto"
+// @Success 201	{array} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
 // @Router /admin/users [post]
@@ -100,8 +100,8 @@ func (u *userController) Create(c *gin.Context) {
 // @Summary Update user
 // @Tags users
 // @Param id path integer true "User ID"
-// @Param request body CreateUserDto true "UpdateUserDto"
-// @Success 200	{array} User
+// @Param request body dto.CreateUserDto true "UpdateUserDto"
+// @Success 200	{array} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError

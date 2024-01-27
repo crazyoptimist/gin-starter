@@ -7,4 +7,4 @@ build:
 db_migrate:
 	go run ./cmd/migrator/main.go
 docs_generate:
-	rm -rf docs/* && swag init -d ./cmd/server
+	rm -rf docs/* && swag init -d ./cmd/server,./

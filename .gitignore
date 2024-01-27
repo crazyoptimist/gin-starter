@@ -9,6 +9,9 @@ bin
 # Test binary, built with `go test -c`
 *.test
 
+# 3rd party dependencies
+# vendor
+
 # Live reload(Air)
 .tmp
 
@@ -17,6 +20,3 @@ bin
 **/*.env
 !.env.example
 !.env.test
-
-# 3rd party dependencies
-vendor

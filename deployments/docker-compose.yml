@@ -8,4 +8,10 @@ services:
       dockerfile: ./deployments/prod.Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      - DSN=${DSN}
+      - JWT_ACCESS_TOKEN_SECRET=${JWT_ACCESS_TOKEN_SECRET}
+      - JWT_REFRESH_TOKEN_SECRET=${JWT_REFRESH_TOKEN_SECRET}
+      - JWT_ACCESS_TOKEN__EXPIRES_IN=${JWT_ACCESS_TOKEN__EXPIRES_IN}
+      - JWT_REFRESH_TOKEN_EXPIRES_IN=${JWT_REFRESH_TOKEN_EXPIRES_IN}
     restart: unless-stopped
