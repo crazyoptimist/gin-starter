@@ -2,8 +2,10 @@ version: "3"
 
 services:
   api:
-    container_name: api
-    build: .
+    container_name: gin-api
+    build:
+      context: ../
+      dockerfile: ./prod.Dockerfile
     ports:
       - "8080:8080"
     restart: unless-stopped

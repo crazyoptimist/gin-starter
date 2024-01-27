@@ -8,7 +8,7 @@ make db_migrate
 
 ## Development
 
-Create a dotenv file.
+Create `.env` file.
 
 ```bash
 cp .env.example .env
@@ -43,7 +43,7 @@ Binaries will be generated inside `PROJECT_ROOT/bin/`
 
 [gin-swagger](https://github.com/swaggo/gin-swagger) is used for API documentation.
 
-To browse docs, open `BASE_URL/swagger/index.html`.
+To browse the API documentation, open `BASE_URL/swagger/index.html`.
 
 Generate/update docs:
 

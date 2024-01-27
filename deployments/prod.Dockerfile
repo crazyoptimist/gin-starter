@@ -1,5 +1,5 @@
 ##
-## STEP 1 - BUILD
+## STAGE 1 - BUILD
 ##
 
 FROM golang:1.20 as builder
@@ -23,17 +23,17 @@ RUN go mod verify
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/app .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/server ./cmd/server
 
 ##
-## STEP 2 - DEPLOY
+## STAGE 2 - DEPLOY
 ##
 
 FROM scratch
 
-COPY --from=builder /source/bin/app /app
+COPY --from=builder /source/bin/server /server
 
-COPY .env /.env
+ENV TWELVE_FACTOR_MODE true
 
 COPY --from=builder /etc/passwd /etc/passwd
 
@@ -41,4 +41,4 @@ USER 1001
 
 EXPOSE 8080
 
-ENTRYPOINT ["/app"]
+ENTRYPOINT ["/server"]

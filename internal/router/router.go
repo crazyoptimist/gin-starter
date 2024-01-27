@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -13,8 +15,12 @@ func RegisterRoutes() *gin.Engine {
 	router := gin.New()
 
 	router.Use(gin.Logger())
-
 	router.Use(gin.Recovery())
+
+	// Health check route
+	router.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "OK")
+	})
 
 	v1 := router.Group("/api")
 	{
