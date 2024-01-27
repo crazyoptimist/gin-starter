@@ -5,6 +5,7 @@ import (
 
 	"gin-starter/internal/dto"
 	"gin-starter/internal/helper"
+	"gin-starter/internal/model"
 	"gin-starter/internal/repository"
 	"gin-starter/pkg/utils"
 )
@@ -30,18 +31,22 @@ func (s *authService) Register(registerDto *dto.RegisterDto) (*dto.LoginResponse
 		return nil, &utils.HttpError{Code: http.StatusBadRequest, Message: "Account already exists with the email"}
 	}
 
+	if registerDto.Password != registerDto.PasswordConfirmation {
+		return nil, &utils.HttpError{Code: http.StatusBadRequest, Message: "Password mismatched"}
+	}
+
 	if hashedPassword, err := utils.HashPassword(registerDto.Password); err != nil {
 		return nil, err
 	} else {
 		registerDto.Password = hashedPassword
 	}
 
-	mappedUser, err := dto.MapRegisterDto(registerDto)
-	if err != nil {
-		return nil, err
-	}
-
-	user, err := s.UserRepository.Create(mappedUser)
+	user, err := s.UserRepository.Create(model.User{
+		FirstName: registerDto.FirstName,
+		LastName:  registerDto.LastName,
+		Email:     registerDto.Email,
+		Password:  registerDto.Password,
+	})
 	if err != nil {
 		return nil, err
 	}
