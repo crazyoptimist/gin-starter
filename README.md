@@ -1,11 +1,5 @@
 # Gin Starter
 
-## DB Migration
-
-```bash
-make db_migrate
-```
-
 ## Development
 
 Create `.env` file.
@@ -38,6 +32,12 @@ make build
 ```
 
 Binaries will be generated inside `PROJECT_ROOT/bin/`
+
+## DB Migration
+
+```bash
+make db_migrate
+```
 
 ## API Documentation
 
