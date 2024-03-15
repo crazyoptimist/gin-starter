@@ -7,23 +7,11 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type UserRepository interface {
-	FindAll() []model.User
-	FindById(id uint) (*model.User, error)
-	FindByEmail(email string) (*model.User, error)
-	Create(user model.User) (*model.User, error)
-	Update(user model.User) (*model.User, error)
-	Delete(user model.User) error
-}
-
 type userRepository struct {
 	DB *gorm.DB
 }
 
-// Check if UserRepository implements everything in the interface
-var _ UserRepository = (*userRepository)(nil)
-
-func NewUserRepository(DB *gorm.DB) UserRepository {
+func NewUserRepository(DB *gorm.DB) *userRepository {
 	return &userRepository{DB: DB}
 }
 

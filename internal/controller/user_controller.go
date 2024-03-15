@@ -8,26 +8,25 @@ import (
 	"gorm.io/gorm"
 
 	"gin-starter/internal/dto"
+	"gin-starter/internal/model"
 	"gin-starter/internal/repository"
 	"gin-starter/internal/service"
 	"gin-starter/pkg/utils"
 )
 
-type UserController interface {
-	FindAll(c *gin.Context)
-	FindById(c *gin.Context)
-	Create(c *gin.Context)
-	Update(c *gin.Context)
-	Delete(c *gin.Context)
+type UserService interface {
+	FindAll() []model.User
+	FindById(id uint) (*model.User, error)
+	Create(createUserDto *dto.CreateUserDto) (*model.User, error)
+	Update(updateUserDto *dto.UpdateUserDto, id uint) (*model.User, error)
+	Delete(id uint) error
 }
 
 type userController struct {
-	UserService service.UserService
+	UserService
 }
 
-var _ UserController = (*userController)(nil)
-
-func NewUserController(db *gorm.DB) UserController {
+func NewUserController(db *gorm.DB) *userController {
 	userRepository := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepository)
 	return &userController{UserService: userService}

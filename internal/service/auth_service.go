@@ -6,23 +6,14 @@ import (
 	"gin-starter/internal/dto"
 	"gin-starter/internal/helper"
 	"gin-starter/internal/model"
-	"gin-starter/internal/repository"
 	"gin-starter/pkg/utils"
 )
 
-type AuthService interface {
-	Register(registerDto *dto.RegisterDto) (*dto.LoginResponse, error)
-	Login(loginDto *dto.LoginDto) (*dto.LoginResponse, error)
-	Logout()
-}
-
 type authService struct {
-	UserRepository repository.UserRepository
+	UserRepository
 }
 
-var _ AuthService = (*authService)(nil)
-
-func NewAuthService(userRepository repository.UserRepository) AuthService {
+func NewAuthService(userRepository UserRepository) *authService {
 	return &authService{UserRepository: userRepository}
 }
 

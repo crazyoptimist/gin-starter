@@ -12,18 +12,17 @@ import (
 	"gin-starter/pkg/utils"
 )
 
-type AuthController interface {
-	Register(c *gin.Context)
-	Login(c *gin.Context)
+type AuthService interface {
+	Register(registerDto *dto.RegisterDto) (*dto.LoginResponse, error)
+	Login(loginDto *dto.LoginDto) (*dto.LoginResponse, error)
+	Logout()
 }
 
 type authController struct {
-	AuthService service.AuthService
+	AuthService
 }
 
-var _ AuthController = (*authController)(nil)
-
-func NewAuthController(db *gorm.DB) AuthController {
+func NewAuthController(db *gorm.DB) *authController {
 	userRepository := repository.NewUserRepository(db)
 	authService := service.NewAuthService(userRepository)
 	return &authController{AuthService: authService}

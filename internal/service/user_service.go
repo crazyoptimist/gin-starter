@@ -3,25 +3,27 @@ package service
 import (
 	"gin-starter/internal/dto"
 	"gin-starter/internal/model"
-	"gin-starter/internal/repository"
 	"gin-starter/pkg/common"
 )
 
-type UserService interface {
+// IMPORTANT: Always define an interface where it is used (injected)!
+// DO NOT define it where it is implemented!
+type UserRepository interface {
 	FindAll() []model.User
 	FindById(id uint) (*model.User, error)
-	Create(createUserDto *dto.CreateUserDto) (*model.User, error)
-	Update(updateUserDto *dto.UpdateUserDto, id uint) (*model.User, error)
-	Delete(id uint) error
+	FindByEmail(email string) (*model.User, error)
+	Create(user model.User) (*model.User, error)
+	Update(user model.User) (*model.User, error)
+	Delete(user model.User) error
 }
 
+// Why don't inject the repository into the controller?
+// Adding business logic to the service is better.
 type userService struct {
-	UserRepository repository.UserRepository
+	UserRepository UserRepository
 }
 
-var _ UserService = (*userService)(nil)
-
-func NewUserService(userRepository repository.UserRepository) UserService {
+func NewUserService(userRepository UserRepository) *userService {
 	return &userService{UserRepository: userRepository}
 }
 

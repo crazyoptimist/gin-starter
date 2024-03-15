@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,12 +10,14 @@ import (
 )
 
 func TestGenerateAccessToken(t *testing.T) {
+	currentDirPath, _ := os.Getwd()
+	relativeEnvPath := "../../.env.test"
 
-	if err := config.LoadConfig("../../.env.test"); err != nil {
+	if err := config.LoadConfig(currentDirPath + "/" + relativeEnvPath); err != nil {
 		panic("Failed to load test env file")
 	}
 
-	t.Run("it should generate a valid access token", func(t *testing.T) {
+	t.Run("Generate a valid access token", func(t *testing.T) {
 
 		userId := uint(1)
 		accessToken, err := GenerateAccessToken(userId)

@@ -1,4 +1,4 @@
-package repository
+package service
 
 import (
 	"errors"
@@ -8,14 +8,14 @@ import (
 	"gin-starter/pkg/utils"
 )
 
-type mockUserRepository struct {
+type userRepositoryStub struct {
 	records []model.User
 }
 
-var _ UserRepository = (*mockUserRepository)(nil)
+var _ UserRepository = (*userRepositoryStub)(nil)
 
-func NewMockUserRepository() UserRepository {
-	return &mockUserRepository{
+func NewUserRepositoryStub() *userRepositoryStub {
+	return &userRepositoryStub{
 		records: []model.User{
 			{BaseModel: common.BaseModel{ID: 1}, FirstName: "John", LastName: "Smith", Email: "john.smith@gmail.com", Password: "password"},
 			{BaseModel: common.BaseModel{ID: 2}, FirstName: "Ben", LastName: "Doe", Email: "ben.doe@gmail.com", Password: "password"},
@@ -23,11 +23,11 @@ func NewMockUserRepository() UserRepository {
 	}
 }
 
-func (r *mockUserRepository) FindAll() []model.User {
+func (r *userRepositoryStub) FindAll() []model.User {
 	return r.records
 }
 
-func (r *mockUserRepository) FindById(id uint) (*model.User, error) {
+func (r *userRepositoryStub) FindById(id uint) (*model.User, error) {
 	for _, record := range r.records {
 		if record.ID == id {
 			return &record, nil
@@ -36,7 +36,7 @@ func (r *mockUserRepository) FindById(id uint) (*model.User, error) {
 	return nil, errors.New("User not found with given ID")
 }
 
-func (r *mockUserRepository) FindByEmail(email string) (*model.User, error) {
+func (r *userRepositoryStub) FindByEmail(email string) (*model.User, error) {
 	for _, record := range r.records {
 		if record.Email == email {
 			return &record, nil
@@ -45,12 +45,12 @@ func (r *mockUserRepository) FindByEmail(email string) (*model.User, error) {
 	return nil, errors.New("User not found with given Email")
 }
 
-func (r *mockUserRepository) Create(user model.User) (*model.User, error) {
+func (r *userRepositoryStub) Create(user model.User) (*model.User, error) {
 	r.records = append(r.records, user)
 	return &user, nil
 }
 
-func (r *mockUserRepository) Update(user model.User) (*model.User, error) {
+func (r *userRepositoryStub) Update(user model.User) (*model.User, error) {
 	for i, record := range r.records {
 		if record.ID == user.ID {
 			r.records[i] = user
@@ -60,7 +60,7 @@ func (r *mockUserRepository) Update(user model.User) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *mockUserRepository) Delete(user model.User) error {
+func (r *userRepositoryStub) Delete(user model.User) error {
 	utils.RemoveAt(r.records, int(user.ID))
 	return nil
 }

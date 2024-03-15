@@ -7,6 +7,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// TODO: Replace zap with Go 1.22 structured logging
 var Logger appLogger
 
 type appLogger struct {
