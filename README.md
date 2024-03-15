@@ -1,5 +1,15 @@
 # Gin Starter
 
+This is a REST API boilerplate.
+
+It uses:
+- Gin for routing
+- Gorm with Postgres database
+- Viper for configuration management
+- JWT for authentication
+- Swagger for API documentation
+- Air for live reloading in development
+
 ## Development
 
 Create `.env` file.
@@ -8,8 +18,7 @@ Create `.env` file.
 cp .env.example .env
 ```
 
-Use [air](https://github.com/cosmtrek/air) for live reloading.
-
+Install [air](https://github.com/cosmtrek/air) for live reloading.
 
 ```bash
 go install github.com/cosmtrek/air@latest
@@ -56,3 +65,5 @@ make docs_generate
 ## License
 
 MIT
+
+Made with :heart: by crazyoptimist

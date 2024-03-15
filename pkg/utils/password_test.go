@@ -8,18 +8,24 @@ import (
 )
 
 func TestHashPassword(t *testing.T) {
-	password := "test*password"
-	hashedPassword, err := HashPassword(password)
-	assert.NoError(t, err)
+	t.Run("Hash password", func(t *testing.T) {
+		password := "test*password"
+		hashedPassword, err := HashPassword(password)
+		assert.NoError(t, err)
 
-	os.Setenv("password", password)
-	os.Setenv("hashedPassword", hashedPassword)
+		os.Setenv("password", password)
+		os.Setenv("hashedPassword", hashedPassword)
+	})
 }
 
 func TestVerifyPassword(t *testing.T) {
-	password := os.Getenv("password")
-	hashedPassword := os.Getenv("hashedPassword")
+	t.Run("Verify password", func(t *testing.T) {
+		password := os.Getenv("password")
+		hashedPassword := os.Getenv("hashedPassword")
 
-	err := VerifyPassword(hashedPassword, password)
-	assert.NoError(t, err)
+		err := VerifyPassword(hashedPassword, password)
+		assert.NoError(t, err)
+		os.Unsetenv("password")
+		os.Unsetenv("hashedPassword")
+	})
 }

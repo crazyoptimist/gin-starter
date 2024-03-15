@@ -14,7 +14,7 @@ import (
 	"gin-starter/internal/router"
 )
 
-// We don't use API key, but in OpenAPI v2 there's no better way to configure this.
+// We don't actually use API key, but OpenAPI v2 enforces this way
 // @securityDefinitions.apikey  JWT
 // @in                          header
 // @name                        Authorization

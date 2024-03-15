@@ -26,7 +26,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/server ./cmd/server
 
 ##
-## STAGE 2 - DEPLOY
+## STAGE 2 - PRODUCTION
 ##
 
 FROM scratch

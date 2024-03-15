@@ -10,7 +10,7 @@ func TestFindById(t *testing.T) {
 	userRepository := NewUserRepositoryStub()
 	userService := NewUserService(userRepository)
 
-	t.Run("it should return error for not existing id", func(t *testing.T) {
+	t.Run("Return error for not existing user ID", func(t *testing.T) {
 		_, err := userService.FindById(100)
 		assert.NotNil(t, err)
 	})
