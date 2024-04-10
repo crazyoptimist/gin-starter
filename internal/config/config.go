@@ -22,7 +22,7 @@ type appConfig struct {
 	JwtRefreshTokenExpiresIn time.Duration `mapstructure:"JWT_REFRESH_TOKEN_EXPIRES_IN"`
 }
 
-func LoadConfig(configFile string) error {
+func LoadConfig(cfgFile string) error {
 	v := viper.New()
 
 	v.SetDefault("SERVER_PORT", 8080)
@@ -40,7 +40,7 @@ func LoadConfig(configFile string) error {
 	}
 
 	v.SetConfigType("env")
-	v.SetConfigFile(configFile)
+	v.SetConfigFile(cfgFile)
 
 	if err := v.ReadInConfig(); err != nil {
 		return err

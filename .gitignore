@@ -14,9 +14,3 @@ bin
 
 # Live reload(Air)
 .tmp
-
-# Dot env file
-**/.env.*
-**/*.env
-!.env.example
-!.env.test

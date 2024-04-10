@@ -22,7 +22,7 @@ import (
 func main() {
 
 	if err := config.LoadConfig(".env"); err != nil {
-		log.Fatalln(`Please make sure dotenv file exists or env variable TWELVE_FACTOR_MODE is set to "true": `, err)
+		log.Fatalln(`Please make sure .env file exists or env variable TWELVE_FACTOR_MODE is set to "true": `, err)
 	}
 
 	if err := config.ConnectDB(); err != nil {

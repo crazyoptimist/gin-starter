@@ -1,4 +1,4 @@
-name: Build & Test
+name: test_and_build
 
 on:
   push:
@@ -16,24 +16,19 @@ jobs:
 
   build_and_test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go: ["1.21", "1.22"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5
       with:
-        go-version: ${{ matrix.go }}
-        check-latest: true
-        cache: true
+        go-version: '^1.22.2'
 
-    - name: Unit Test ${{ matrix.go }}
+    - name: Run unit test
       run: make test
 
-    - name: Go Vet
+    - name: Run go vet
       run: make vet
 
-    - name: Build
+    - name: Build the application
       run: make build

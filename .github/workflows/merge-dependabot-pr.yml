@@ -1,4 +1,4 @@
-name: Auto-Merge Dependabot PR
+name: merge_dependabot_pr
 on:
   pull_request:
     branches:
@@ -14,21 +14,21 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]'  }}
     steps:
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v1
         with:
-          github-token: "${{ secrets.DEPENDABOT_GITHUB_TOKEN  }}"
+          github-token: "${{ secrets.DEPENDABOT_GITHUB_TOKEN }}"
 
-      - name: Approve PR
+      - name: Approve dependabot PR
         run: gh pr review --approve "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url  }}
           GITHUB_TOKEN: ${{ secrets.DEPENDABOT_GITHUB_TOKEN  }}
 
-      - name: Enable auto-merge for Dependabot PRs
+      - name: Merge dependabot PR
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
