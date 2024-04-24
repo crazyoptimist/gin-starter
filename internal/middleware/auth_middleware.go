@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +30,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// TODO: Implement token blacklist for logout, using Redis or another in-memory db?
+		// TODO: Implement a token blacklist for logout, using Redis or another in-memory db.
 		// if helper.IsBlacklistedJWT(accessToken) {
 		// 	utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token"})
 		// 	return
@@ -54,8 +55,9 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// TODO: Inject user object to the context?
-		// c.Set("user", user)
+		issuer, _ := parsedToken.Claims.GetIssuer()
+		userId, _ := strconv.Atoi(issuer)
+		c.Set("user", userId)
 
 		c.Next()
 	}
