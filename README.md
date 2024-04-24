@@ -12,12 +12,6 @@ It uses:
 
 ## Development
 
-Create `.env` file.
-
-```bash
-cp .env.example .env
-```
-
 Install [air](https://github.com/cosmtrek/air) for live reloading.
 
 ```bash
