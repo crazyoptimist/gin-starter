@@ -9,9 +9,9 @@ import (
 )
 
 type CreateUserDto struct {
-	FirstName string `gorm:"column:first_name" json:"firstName"`
-	LastName  string `gorm:"column:last_name" json:"lastName"`
-	Email     string `gorm:"column:email" json:"email" binding:"required,email"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email" binding:"required,email"`
 }
 
 func MapCreateUserDto(dto *CreateUserDto) model.User {
@@ -27,16 +27,23 @@ func MapCreateUserDto(dto *CreateUserDto) model.User {
 }
 
 type UpdateUserDto struct {
-	FirstName string `gorm:"column:first_name" json:"firstName"`
-	LastName  string `gorm:"column:last_name" json:"lastName"`
-	Email     string `gorm:"column:email" json:"email"`
+	FirstName string `json:"firstName"`
+	LastName  string `json:"lastName"`
+	Email     string `json:"email" binding:"omitempty,email"`
+	Password  string `json:"password"`
 }
 
 func MapUpdateUserDto(dto *UpdateUserDto, id uint) model.User {
+	var hashedPassword string
+	if dto.Password != "" {
+		hashedPassword, _ = utils.HashPassword(dto.Password)
+	}
+
 	return model.User{
 		BaseModel: common.BaseModel{ID: id},
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
 		Email:     dto.Email,
+		Password:  hashedPassword,
 	}
 }
