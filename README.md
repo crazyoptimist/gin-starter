@@ -39,7 +39,7 @@ Binaries will be generated inside `PROJECT_ROOT/bin/`
 ## DB Migration
 
 ```bash
-make db_migrate
+make migrate
 ```
 
 ## API Documentation
@@ -53,7 +53,7 @@ Generate/update docs:
 ```bash
 go install github.com/swaggo/swag/cmd/swag@latest
 
-make docs_generate
+make docs
 ```
 
 ## License
