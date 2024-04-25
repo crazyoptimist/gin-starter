@@ -1,6 +1,8 @@
 package dto
 
 import (
+	"github.com/google/uuid"
+
 	"gin-starter/internal/model"
 	"gin-starter/pkg/common"
 	"gin-starter/pkg/utils"
@@ -13,14 +15,14 @@ type CreateUserDto struct {
 }
 
 func MapCreateUserDto(dto *CreateUserDto) model.User {
-	// TODO: generate a random passoword
-	password, _ := utils.HashPassword("must**reset")
+	password := uuid.NewString()
+	hashedPassword, _ := utils.HashPassword(password)
 
 	return model.User{
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
 		Email:     dto.Email,
-		Password:  password,
+		Password:  hashedPassword,
 	}
 }
 
