@@ -95,6 +95,26 @@ func (u *userController) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
+// Me godoc
+// @Summary Get my profile
+// @Tags auth
+// @Success 200	{array} model.User
+// @Failure 400 {object} utils.HttpError
+// @Failure 500 {object} utils.HttpError
+// @Router /users/me [post]
+// @Security JWT
+func (u *userController) Me(c *gin.Context) {
+	id, _ := c.Get("user")
+
+	user, err := u.UserService.FindById(uint(id.(int)))
+	if err != nil {
+		utils.RaiseHttpError(c, http.StatusNotFound, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
 // Update godoc
 // @Summary Update user
 // @Tags users

@@ -16,6 +16,7 @@ func RegisterAuthRoutes(g *gin.RouterGroup) {
 func RegisterUserRoutes(g *gin.RouterGroup) {
 	controllers := controller.NewUserController(config.Config.DB)
 	g.GET("", controllers.FindAll)
+	g.GET("me", controllers.Me)
 	g.GET(":id", controllers.FindById)
 	g.POST("", controllers.Create)
 	g.PATCH(":id", controllers.Update)
