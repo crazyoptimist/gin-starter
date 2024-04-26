@@ -37,7 +37,7 @@ func NewUserController(db *gorm.DB) *userController {
 // @Tags users
 // @Success 200	{array} model.User
 // @Failure 500 {object} utils.HttpError
-// @Router /admin/users [get]
+// @Router /users [get]
 // @Security JWT
 func (u *userController) FindAll(c *gin.Context) {
 	users := u.UserService.FindAll()
@@ -52,7 +52,7 @@ func (u *userController) FindAll(c *gin.Context) {
 // @Failure 400 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
-// @Router /admin/users/{id} [get]
+// @Router /users/{id} [get]
 // @Security JWT
 func (u *userController) FindById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -77,7 +77,7 @@ func (u *userController) FindById(c *gin.Context) {
 // @Success 201	{array} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
-// @Router /admin/users [post]
+// @Router /users [post]
 // @Security JWT
 func (u *userController) Create(c *gin.Context) {
 	var createUserDto dto.CreateUserDto
@@ -104,7 +104,7 @@ func (u *userController) Create(c *gin.Context) {
 // @Failure 400 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
-// @Router /admin/users/{id} [patch]
+// @Router /users/{id} [patch]
 // @Security JWT
 func (u *userController) Update(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -139,7 +139,7 @@ func (u *userController) Update(c *gin.Context) {
 // @Param id path integer true "User ID"
 // @Success 200
 // @Failure 500 {object} utils.HttpError
-// @Router /admin/users/{id} [delete]
+// @Router /users/{id} [delete]
 // @Security JWT
 func (u *userController) Delete(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
