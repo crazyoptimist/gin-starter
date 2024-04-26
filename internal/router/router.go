@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -16,6 +17,16 @@ func RegisterRoutes() *gin.Engine {
 
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowHeaders = []string{
+		"Authorization",
+		"Content-Type",
+		"X-CSRF-Token",
+		"X-Max",
+	}
+	router.Use(cors.New(corsConfig))
 
 	// Health check route
 	router.GET("/", func(c *gin.Context) {
