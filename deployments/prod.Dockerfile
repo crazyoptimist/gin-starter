@@ -2,7 +2,7 @@
 ## STAGE 1 - BUILD
 ##
 
-FROM golang:1.20 as builder
+FROM golang:1.22 as builder
 
 ARG USERNAME=iamuser
 ARG USER_UID=1001
@@ -24,6 +24,7 @@ RUN go mod verify
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/server ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/cli ./cmd/cli
 
 ##
 ## STAGE 2 - PRODUCTION
@@ -32,6 +33,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/server ./cmd/server
 FROM scratch
 
 COPY --from=builder /source/bin/server /server
+COPY --from=builder /source/bin/cli /cli
 
 ENV GIN_MODE=release
 ENV TWELVE_FACTOR_MODE=true

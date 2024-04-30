@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  api:
+    container_name: gin-api
+    build:
+      context: ../
+      dockerfile: ./deployments/prod.Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DSN=${DSN}
+      - JWT_ACCESS_TOKEN_SECRET=${JWT_ACCESS_TOKEN_SECRET}
+      - JWT_REFRESH_TOKEN_SECRET=${JWT_REFRESH_TOKEN_SECRET}
+      - JWT_ACCESS_TOKEN__EXPIRES_IN=${JWT_ACCESS_TOKEN__EXPIRES_IN}
+      - JWT_REFRESH_TOKEN_EXPIRES_IN=${JWT_REFRESH_TOKEN_EXPIRES_IN}
+    restart: unless-stopped
+    depends_on:
+      - postgresql
+
+  postgresql:
+    image: postgres:16
+    container_name: postgresql
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    <<: &default_logging
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "200k"
+          max-file: "10"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
