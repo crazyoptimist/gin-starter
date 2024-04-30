@@ -23,8 +23,8 @@ func RegisterRoutes() *gin.Engine {
 	corsConfig.AllowHeaders = []string{
 		"Authorization",
 		"Content-Type",
+		"Access-Control-Allow-Origin",
 		"X-CSRF-Token",
-		"X-Max",
 	}
 	router.Use(cors.New(corsConfig))
 
