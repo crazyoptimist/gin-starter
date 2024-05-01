@@ -44,7 +44,7 @@ func main() {
 
 	if *seed {
 		if *email == "" || *password == "" {
-			fmt.Println("Error: Both username and password must be provided for seeding.")
+			fmt.Println("Error: Both email and password must be provided for seeding.")
 			return
 		}
 		seedAdmin(*email, *password)
