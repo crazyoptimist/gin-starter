@@ -9,12 +9,12 @@ migrate:
 docs:
 	rm -rf docs/* && swag init -d ./cmd/server,./
 docker:
-	docker compose -f ./deployments/compose.yml build
+	docker compose -f ./deployments/compose.yaml build
 up:
-	docker compose -f ./deployments/compose.yml up -d
+	docker compose -f ./deployments/compose.yaml up -d
 down:
-	docker compose -f ./deployments/compose.yml down
+	docker compose -f ./deployments/compose.yaml down
 log:
-	docker compose -f ./deployments/compose.yml logs -f
+	docker compose -f ./deployments/compose.yaml logs -f
 
 .PHONY: docs test build docker log
