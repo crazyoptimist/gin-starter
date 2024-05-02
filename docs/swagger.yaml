@@ -86,9 +86,7 @@ paths:
         "201":
           description: Created
           schema:
-            items:
-              $ref: '#/definitions/dto.LoginResponse'
-            type: array
+            $ref: '#/definitions/dto.LoginResponse'
         "400":
           description: Bad Request
           schema:
@@ -117,9 +115,7 @@ paths:
         "201":
           description: Created
           schema:
-            items:
-              $ref: '#/definitions/dto.LoginResponse'
-            type: array
+            $ref: '#/definitions/dto.LoginResponse'
         "400":
           description: Bad Request
           schema:
@@ -161,9 +157,7 @@ paths:
         "201":
           description: Created
           schema:
-            items:
-              $ref: '#/definitions/model.User'
-            type: array
+            $ref: '#/definitions/model.User'
         "400":
           description: Bad Request
           schema:
@@ -243,9 +237,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/model.User'
-            type: array
+            $ref: '#/definitions/model.User'
         "400":
           description: Bad Request
           schema:
@@ -263,6 +255,26 @@ paths:
       summary: Update user
       tags:
       - users
+  /users/me:
+    post:
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HttpError'
+      security:
+      - JWT: []
+      summary: Get my profile
+      tags:
+      - auth
 securityDefinitions:
   JWT:
     in: header

@@ -74,7 +74,7 @@ func (u *userController) FindById(c *gin.Context) {
 // @Summary Create a new user
 // @Tags users
 // @Param request body dto.CreateUserDto true "CreateUserDto"
-// @Success 201	{array} model.User
+// @Success 201	{object} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
 // @Router /users [post]
@@ -98,7 +98,7 @@ func (u *userController) Create(c *gin.Context) {
 // Me godoc
 // @Summary Get my profile
 // @Tags auth
-// @Success 200	{array} model.User
+// @Success 200	{object} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
 // @Router /users/me [post]
@@ -120,7 +120,7 @@ func (u *userController) Me(c *gin.Context) {
 // @Tags users
 // @Param id path integer true "User ID"
 // @Param request body dto.CreateUserDto true "UpdateUserDto"
-// @Success 200	{array} model.User
+// @Success 200	{object} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError

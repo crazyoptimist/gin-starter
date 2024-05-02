@@ -32,7 +32,7 @@ func NewAuthController(db *gorm.DB) *authController {
 // @Summary Register new user
 // @Tags auth
 // @Param request body dto.RegisterDto true "RegisterDto"
-// @Success 201	{array} dto.LoginResponse
+// @Success 201	{object} dto.LoginResponse
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
 // @Router /auth/register [post]
@@ -56,7 +56,7 @@ func (a *authController) Register(c *gin.Context) {
 // @Summary Login user
 // @Tags auth
 // @Param request body dto.LoginDto true "LoginDto"
-// @Success 201	{array} dto.LoginResponse
+// @Success 201	{object} dto.LoginResponse
 // @Failure 400 {object} utils.HttpError
 // @Failure 401 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
