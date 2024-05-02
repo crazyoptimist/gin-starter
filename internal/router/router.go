@@ -36,13 +36,9 @@ func RegisterRoutes() *gin.Engine {
 	v1 := router.Group("/api")
 	{
 		authGroup := v1.Group("/auth")
-		{
-			RegisterAuthRoutes(authGroup)
-		}
+		RegisterAuthRoutes(authGroup)
 		usersGroup := v1.Group("/users", middleware.AuthMiddleware())
-		{
-			RegisterUserRoutes(usersGroup)
-		}
+		RegisterUserRoutes(usersGroup)
 	}
 
 	return router
