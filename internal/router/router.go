@@ -26,6 +26,9 @@ func RegisterRoutes() *gin.Engine {
 		"Access-Control-Allow-Origin",
 		"X-CSRF-Token",
 	}
+	corsConfig.ExposeHeaders = []string{
+		"X-Total-Count",
+	}
 	router.Use(cors.New(corsConfig))
 
 	// Health check route
