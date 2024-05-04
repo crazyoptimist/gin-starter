@@ -23,7 +23,7 @@ func NewUserRepositoryStub() *userRepositoryStub {
 	}
 }
 
-func (r *userRepositoryStub) FindAll() []model.User {
+func (r *userRepositoryStub) FindAll(queryParams utils.QueryParams) []model.User {
 	return r.records
 }
 

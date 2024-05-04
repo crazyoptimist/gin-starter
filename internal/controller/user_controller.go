@@ -15,7 +15,7 @@ import (
 )
 
 type UserService interface {
-	FindAll() []model.User
+	FindAll(queryParams utils.QueryParams) []model.User
 	FindById(id uint) (*model.User, error)
 	Create(createUserDto *dto.CreateUserDto) (*model.User, error)
 	Update(updateUserDto *dto.UpdateUserDto, id uint) (*model.User, error)
@@ -40,7 +40,8 @@ func NewUserController(db *gorm.DB) *userController {
 // @Router /users [get]
 // @Security JWT
 func (u *userController) FindAll(c *gin.Context) {
-	users := u.UserService.FindAll()
+	queryParams := utils.GetQueryParams(c)
+	users := u.UserService.FindAll(queryParams)
 	c.JSON(http.StatusOK, users)
 }
 

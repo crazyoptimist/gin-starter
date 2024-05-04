@@ -2,6 +2,7 @@ package repository
 
 import (
 	"gin-starter/internal/model"
+	"gin-starter/pkg/utils"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -15,10 +16,10 @@ func NewUserRepository(DB *gorm.DB) *userRepository {
 	return &userRepository{DB: DB}
 }
 
-func (u *userRepository) FindAll() []model.User {
+func (u *userRepository) FindAll(queryParams utils.QueryParams) []model.User {
 	var users []model.User
 
-	u.DB.Find(&users)
+	u.DB.Limit(queryParams.Limit).Offset(queryParams.Offset).Find(&users)
 
 	return users
 }
