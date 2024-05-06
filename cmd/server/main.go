@@ -45,7 +45,7 @@ func main() {
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil {
-			log.Println("Starting a HTTP server failed: ", err)
+			log.Println(err)
 		}
 	}()
 
