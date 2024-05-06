@@ -26,12 +26,12 @@ func main() {
 	}
 
 	if err := config.ConnectDB(); err != nil {
-		log.Fatalln("Error: database connection failed: ", err)
+		log.Fatalln("Database connection failed: ", err)
 	}
 
 	appLogger, err := logger.InitAppLogger()
 	if err != nil {
-		log.Fatalln("Error: logger initialization failed: ", err)
+		log.Fatalln("Logger initialization failed: ", err)
 	}
 	defer appLogger.Instance.Sync()
 
@@ -45,7 +45,7 @@ func main() {
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil {
-			log.Println("ListenAndServe: ", err)
+			log.Println("Starting a HTTP server failed: ", err)
 		}
 	}()
 
@@ -53,12 +53,12 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
-	log.Println("Shutdown Server ...")
+	log.Println("Gracefully shutting down...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal("Server Shutdown:", err)
+		log.Fatal("HTTP server shutdown failed: ", err)
 	}
-	log.Println("Server exiting")
+	log.Println("Graceful shutdown finished.")
 }
