@@ -32,14 +32,22 @@ func InitAppLogger() (*appLogger, error) {
 	return &Logger, err
 }
 
-func (l *appLogger) Info(data interface{}) {
-	l.Instance.Info(data)
+func (l *appLogger) Debug(args ...interface{}) {
+	l.Instance.Debug(args)
 }
 
-func (l *appLogger) Warn(data interface{}) {
-	l.Instance.Warn(data)
+func (l *appLogger) Info(args ...interface{}) {
+	l.Instance.Info(args)
 }
 
-func (l *appLogger) Error(data interface{}) {
-	l.Instance.Error(data)
+func (l *appLogger) Warn(args ...interface{}) {
+	l.Instance.Warn(args)
+}
+
+func (l *appLogger) Error(args ...interface{}) {
+	l.Instance.Error(args)
+}
+
+func (l *appLogger) Fatal(args ...interface{}) {
+	l.Instance.Fatal(args)
 }
