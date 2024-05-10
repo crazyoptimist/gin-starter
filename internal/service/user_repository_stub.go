@@ -23,7 +23,11 @@ func NewUserRepositoryStub() *userRepositoryStub {
 	}
 }
 
-func (r *userRepositoryStub) FindAll(queryParams utils.QueryParams) []model.User {
+func (r *userRepositoryStub) FindAll(
+	paginationParam utils.PaginationParam,
+	sortParams []utils.SortParam,
+	filterParams []utils.FilterParam,
+) []model.User {
 	return r.records
 }
 

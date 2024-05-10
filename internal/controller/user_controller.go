@@ -15,7 +15,11 @@ import (
 )
 
 type UserService interface {
-	FindAll(queryParams utils.QueryParams) []model.User
+	FindAll(
+		paginationParam utils.PaginationParam,
+		sortParams []utils.SortParam,
+		filterParams []utils.FilterParam,
+	) []model.User
 	FindById(id uint) (*model.User, error)
 	Create(createUserDto *dto.CreateUserDto) (*model.User, error)
 	Update(updateUserDto *dto.UpdateUserDto, id uint) (*model.User, error)
@@ -40,8 +44,12 @@ func NewUserController(db *gorm.DB) *userController {
 // @Router /users [get]
 // @Security JWT
 func (u *userController) FindAll(c *gin.Context) {
-	queryParams := utils.GetQueryParams(c)
-	users := u.UserService.FindAll(queryParams)
+	paginationParam := utils.GetPaginationParam(c)
+	sortParams := utils.GetSortParams(c)
+	filterParams := utils.GetFilterParams(c)
+
+	users := u.UserService.FindAll(paginationParam, sortParams, filterParams)
+
 	c.JSON(http.StatusOK, users)
 }
 

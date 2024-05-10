@@ -16,10 +16,34 @@ func NewUserRepository(DB *gorm.DB) *userRepository {
 	return &userRepository{DB: DB}
 }
 
-func (u *userRepository) FindAll(queryParams utils.QueryParams) []model.User {
+func (u *userRepository) FindAll(
+	paginationParam utils.PaginationParam,
+	sortParams []utils.SortParam,
+	filterParams []utils.FilterParam,
+) []model.User {
 	var users []model.User
 
-	u.DB.Limit(queryParams.Limit).Offset(queryParams.Offset).Find(&users)
+	var orderQuery string
+
+	for _, sortParam := range sortParams {
+		if sortParam.FieldName == "email" {
+			orderQuery += " email " + sortParam.Order
+		}
+		if sortParam.FieldName == "firstName" {
+			orderQuery += " ethnicity " + sortParam.Order
+		}
+		if sortParam.FieldName == "lastName" {
+			orderQuery += " last_name " + sortParam.Order
+		}
+	}
+
+	u.DB.Order(
+		orderQuery,
+	).Limit(
+		paginationParam.Limit,
+	).Offset(
+		paginationParam.Offset,
+	).Find(&users)
 
 	return users
 }

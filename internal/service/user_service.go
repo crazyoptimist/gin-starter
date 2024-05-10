@@ -10,7 +10,11 @@ import (
 // IMPORTANT: Always define an interface where it is used (injected)!
 // DO NOT define it where it is implemented!
 type UserRepository interface {
-	FindAll(queryParams utils.QueryParams) []model.User
+	FindAll(
+		paginationParam utils.PaginationParam,
+		sortParams []utils.SortParam,
+		filterParams []utils.FilterParam,
+	) []model.User
 	FindById(id uint) (*model.User, error)
 	FindByEmail(email string) (*model.User, error)
 	Create(user model.User) (*model.User, error)
@@ -28,8 +32,12 @@ func NewUserService(userRepository UserRepository) *userService {
 	return &userService{UserRepository: userRepository}
 }
 
-func (u *userService) FindAll(queryParams utils.QueryParams) []model.User {
-	return u.UserRepository.FindAll(queryParams)
+func (u *userService) FindAll(
+	paginationParam utils.PaginationParam,
+	sortParams []utils.SortParam,
+	filterParams []utils.FilterParam,
+) []model.User {
+	return u.UserRepository.FindAll(paginationParam, sortParams, filterParams)
 }
 
 func (u *userService) FindById(id uint) (*model.User, error) {

@@ -15,6 +15,8 @@ func HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
+// VerifyPassword compares a bcrypt hashed password with its possible plaintext equivalent.
+// Returns nil on success, or an error on failure.
 func VerifyPassword(hashedPassword, password string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	if err != nil {
