@@ -4,12 +4,16 @@
 
 FROM golang:1.22 as builder
 
+# Add a non-root user (for prod image)
 ARG USERNAME=iamuser
 ARG USER_UID=1001
 ARG USER_GID=$USER_UID
 
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+
+# Required for performing outbound HTTP requests (for prod image)
+RUN apt update && apt install -y ca-certificates
 
 ENV APP_HOME /source
 
@@ -38,7 +42,9 @@ COPY --from=builder /source/bin/cli /cli
 ENV GIN_MODE=release
 ENV TWELVE_FACTOR_MODE=true
 
+# Copy the non-root user and ca-certificates
 COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 USER 1001
 

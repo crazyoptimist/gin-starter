@@ -1,11 +1,11 @@
-name: gin-api
+name: gin-starter
 
 services:
   api:
-    container_name: gin-api
+    container_name: api
     build:
       context: ../
-      dockerfile: ./deployments/prod.Dockerfile
+      dockerfile: ./deployments/api.Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -14,6 +14,12 @@ services:
       - JWT_REFRESH_TOKEN_SECRET=${JWT_REFRESH_TOKEN_SECRET}
       - JWT_ACCESS_TOKEN__EXPIRES_IN=${JWT_ACCESS_TOKEN__EXPIRES_IN}
       - JWT_REFRESH_TOKEN_EXPIRES_IN=${JWT_REFRESH_TOKEN_EXPIRES_IN}
+    <<: &default_logging
+      logging:
+        driver: "json-file"
+        options:
+          max-size: "200k"
+          max-file: "10"
     restart: unless-stopped
     depends_on:
       - postgresql
@@ -29,12 +35,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    <<: &default_logging
-      logging:
-        driver: "json-file"
-        options:
-          max-size: "200k"
-          max-file: "10"
+    <<: *default_logging
     restart: unless-stopped
 
 volumes:
