@@ -19,7 +19,7 @@ type UserService interface {
 		paginationParam utils.PaginationParam,
 		sortParams []utils.SortParam,
 		filterParams []utils.FilterParam,
-	) []model.User
+	) ([]model.User, int64, error)
 	FindById(id uint) (*model.User, error)
 	Create(createUserDto *dto.CreateUserDto) (*model.User, error)
 	Update(updateUserDto *dto.UpdateUserDto, id uint) (*model.User, error)
@@ -48,7 +48,13 @@ func (u *userController) FindAll(c *gin.Context) {
 	sortParams := utils.GetSortParams(c)
 	filterParams := utils.GetFilterParams(c)
 
-	users := u.UserService.FindAll(paginationParam, sortParams, filterParams)
+	users, totalCount, err := u.UserService.FindAll(paginationParam, sortParams, filterParams)
+	if err != nil {
+		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		return
+	}
+
+	c.Header("X-Total-Count", strconv.FormatInt(totalCount, 10))
 
 	c.JSON(http.StatusOK, users)
 }

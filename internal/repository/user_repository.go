@@ -20,32 +20,60 @@ func (u *userRepository) FindAll(
 	paginationParam utils.PaginationParam,
 	sortParams []utils.SortParam,
 	filterParams []utils.FilterParam,
-) []model.User {
-	var users []model.User
+) ([]model.User, int64, error) {
+	query := u.DB.Model(&model.User{})
 
-	var orderQuery string
+	// Filter
+	filterQuery := make(map[string]interface{})
 
-	for _, sortParam := range sortParams {
-		if sortParam.FieldName == "email" {
-			orderQuery += " email " + sortParam.Order
+	for _, filterParam := range filterParams {
+		if filterParam.FieldName == "email" {
+			filterQuery["email"] = filterParam.Value
 		}
-		if sortParam.FieldName == "firstName" {
-			orderQuery += " ethnicity " + sortParam.Order
+		if filterParam.FieldName == "firstName" {
+			filterQuery["first_name"] = filterParam.Value
 		}
-		if sortParam.FieldName == "lastName" {
-			orderQuery += " last_name " + sortParam.Order
+		if filterParam.FieldName == "lastName" {
+			filterQuery["last_name"] = filterParam.Value
 		}
 	}
 
-	u.DB.Order(
-		orderQuery,
-	).Limit(
+	query = query.Where(filterQuery)
+
+	// Count
+	var totalCount int64
+
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, err
+	}
+
+	// Sort
+	for _, sortParam := range sortParams {
+		if sortParam.FieldName == "email" {
+			query = query.Order("email " + sortParam.Order)
+		}
+		if sortParam.FieldName == "firstName" {
+			query = query.Order("first_name " + sortParam.Order)
+		}
+		if sortParam.FieldName == "lastName" {
+			query = query.Order("last_name" + sortParam.Order)
+		}
+	}
+
+	// Pagination
+	query = query.Limit(
 		paginationParam.Limit,
 	).Offset(
 		paginationParam.Offset,
-	).Find(&users)
+	)
 
-	return users
+	var users []model.User
+
+	if err := query.Find(&users).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return users, totalCount, nil
 }
 
 func (u *userRepository) FindById(id uint) (*model.User, error) {

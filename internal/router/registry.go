@@ -5,8 +5,6 @@ import (
 
 	"gin-starter/internal/config"
 	"gin-starter/internal/controller"
-	"gin-starter/internal/middleware"
-	"gin-starter/internal/model"
 )
 
 func RegisterAuthRoutes(g *gin.RouterGroup) {
@@ -17,7 +15,7 @@ func RegisterAuthRoutes(g *gin.RouterGroup) {
 
 func RegisterUserRoutes(g *gin.RouterGroup) {
 	controllers := controller.NewUserController(config.Config.DB)
-	g.GET("", middleware.TotalCountMiddleware(&model.User{}), controllers.FindAll)
+	g.GET("", controllers.FindAll)
 	g.GET("me", controllers.Me)
 	g.GET(":id", controllers.FindById)
 	g.POST("", controllers.Create)

@@ -27,8 +27,8 @@ func (r *userRepositoryStub) FindAll(
 	paginationParam utils.PaginationParam,
 	sortParams []utils.SortParam,
 	filterParams []utils.FilterParam,
-) []model.User {
-	return r.records
+) ([]model.User, int64, error) {
+	return r.records, 2, nil
 }
 
 func (r *userRepositoryStub) FindById(id uint) (*model.User, error) {

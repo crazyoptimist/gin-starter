@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"slices"
 	"strconv"
 	"strings"
 
@@ -78,13 +79,28 @@ func GetSortParams(c *gin.Context) []SortParam {
 }
 
 // We must handle the actual value types in the query composition
+// We only support "eq" operator for now
 type FilterParam struct {
 	FieldName string
 	Value     string
 }
 
 func GetFilterParams(c *gin.Context) []FilterParam {
-	// queries := c.Request.URL.Query()
 
-	return []FilterParam{}
+	var filterParams = []FilterParam{}
+
+	queryMap := c.Request.URL.Query()
+	paginationAndSortKeys := []string{"_limit", "_offset", "_sort", "_order"}
+
+	for key, val := range queryMap {
+		if slices.Contains(paginationAndSortKeys, key) {
+			continue
+		}
+		filterParams = append(filterParams, FilterParam{
+			FieldName: key,
+			Value:     val[0],
+		})
+	}
+
+	return filterParams
 }

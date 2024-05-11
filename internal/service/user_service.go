@@ -14,7 +14,7 @@ type UserRepository interface {
 		paginationParam utils.PaginationParam,
 		sortParams []utils.SortParam,
 		filterParams []utils.FilterParam,
-	) []model.User
+	) ([]model.User, int64, error)
 	FindById(id uint) (*model.User, error)
 	FindByEmail(email string) (*model.User, error)
 	Create(user model.User) (*model.User, error)
@@ -36,7 +36,7 @@ func (u *userService) FindAll(
 	paginationParam utils.PaginationParam,
 	sortParams []utils.SortParam,
 	filterParams []utils.FilterParam,
-) []model.User {
+) ([]model.User, int64, error) {
 	return u.UserRepository.FindAll(paginationParam, sortParams, filterParams)
 }
 
