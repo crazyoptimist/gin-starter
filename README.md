@@ -9,6 +9,7 @@ It uses:
 - JWT for authentication
 - Swagger for API documentation
 - Air for live reloading in development
+- Redis for caching
 
 ## Development
 

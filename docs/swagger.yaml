@@ -27,6 +27,13 @@ definitions:
       refresh_token:
         type: string
     type: object
+  dto.LogoutDto:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
   dto.RegisterDto:
     properties:
       email:
@@ -100,6 +107,49 @@ paths:
           schema:
             $ref: '#/definitions/utils.HttpError'
       summary: Login user
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HttpError'
+      security:
+      - JWT: []
+      summary: Logout user (Invalidates refresh token)
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      parameters:
+      - description: TokenRefresh DTO
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LogoutDto'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.HttpError'
+      summary: Refresh tokens and invalidate the previous refresh token
       tags:
       - auth
   /auth/register:

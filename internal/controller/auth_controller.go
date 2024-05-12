@@ -105,7 +105,7 @@ func (a *authController) Logout(c *gin.Context) {
 // RefreshToken godoc
 // @Summary Refresh tokens and invalidate the previous refresh token
 // @Tags auth
-// @Param request body dto.Logout true "TokenRefresh DTO"
+// @Param request body dto.LogoutDto true "TokenRefresh DTO"
 // @Success 201	{object} dto.LoginResponse
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
