@@ -29,6 +29,11 @@ func main() {
 		log.Fatalln("Database connection failed: ", err)
 	}
 
+	if err := config.ConnectCacheDB(); err != nil {
+		log.Fatalln("Cache DB connection failed: ", err)
+	}
+	defer config.Config.CacheClient.Close()
+
 	appLogger, err := logger.InitAppLogger()
 	if err != nil {
 		log.Fatalln("Logger initialization failed: ", err)

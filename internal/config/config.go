@@ -4,6 +4,7 @@ import (
 	"os"
 	"time"
 
+	badger "github.com/dgraph-io/badger/v4"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,7 +13,8 @@ import (
 var Config appConfig
 
 type appConfig struct {
-	DB *gorm.DB
+	DB          *gorm.DB
+	CacheClient *badger.DB
 
 	ServerPort               int           `mapstructure:"SERVER_PORT"`
 	DSN                      string        `mapstructure:"DSN"`
@@ -56,5 +58,18 @@ func ConnectDB() error {
 	}
 
 	Config.DB = db
+	return nil
+}
+
+func ConnectCacheDB() error {
+	cacheDb, err := badger.Open(
+		// nil disables logging
+		badger.DefaultOptions("").WithInMemory(true).WithLogger(nil),
+	)
+	if err != nil {
+		return err
+	}
+
+	Config.CacheClient = cacheDb
 	return nil
 }
