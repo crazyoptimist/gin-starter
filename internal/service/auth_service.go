@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"net/http"
 
 	"gin-starter/internal/dto"
@@ -8,6 +9,8 @@ import (
 	"gin-starter/internal/model"
 	"gin-starter/pkg/utils"
 )
+
+var ErrTokenBlacklisted = fmt.Errorf("Refresh token is blacklisted")
 
 type authService struct {
 	UserRepository
@@ -68,7 +71,46 @@ func (s *authService) Login(loginDto *dto.LoginDto) (*dto.LoginResponse, error) 
 	return &dto.LoginResponse{AccessToken: accessToken, RefreshToken: refreshToken}, nil
 }
 
-func (s *authService) Logout() {
-	// TODO: Implement this
-	return
+func (s *authService) Logout(logoutDto *dto.LogoutDto) error {
+	return helper.BlacklistToken(logoutDto.RefreshToken)
+}
+
+func (s *authService) RefreshToken(logoutDto *dto.LogoutDto) (*dto.LoginResponse, error) {
+
+	isTokenValid, userId, keyId, err := helper.ValidateToken(logoutDto.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	if !isTokenValid {
+		return nil, fmt.Errorf("Refresh token is invalid")
+	}
+
+	if keyId != helper.RefreshTokenKeyId {
+		return nil, fmt.Errorf("Wrong key ID")
+	}
+
+	isTokenBlacklisted, err := helper.IsTokenBlacklisted(logoutDto.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	if isTokenBlacklisted {
+		return nil, ErrTokenBlacklisted
+	}
+
+	err = helper.BlacklistToken(logoutDto.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	accessToken, refreshToken, err := helper.GenerateTokenPair(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.LoginResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }

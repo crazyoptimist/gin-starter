@@ -5,12 +5,15 @@ import (
 
 	"gin-starter/internal/config"
 	"gin-starter/internal/controller"
+	"gin-starter/internal/middleware"
 )
 
 func RegisterAuthRoutes(g *gin.RouterGroup) {
 	controllers := controller.NewAuthController(config.Config.DB)
 	g.POST("/register", controllers.Register)
 	g.POST("/login", controllers.Login)
+	g.POST("/logout", controllers.Logout, middleware.AuthMiddleware())
+	g.POST("/refresh", controllers.RefreshToken)
 }
 
 func RegisterUserRoutes(g *gin.RouterGroup) {

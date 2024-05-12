@@ -61,19 +61,19 @@ func GenerateRefreshToken(userId uint) (string, error) {
 	return refreshToken, nil
 }
 
-func GenerateTokenPair(userId uint) (string, string, error) {
+func GenerateTokenPair(userId uint) (accessToken, refreshToken string, err error) {
 
-	accessToken, err := GenerateAccessToken(userId)
+	accessToken, err = GenerateAccessToken(userId)
 	if err != nil {
-		return "", "", err
+		return
 	}
 
-	refreshToken, err := GenerateRefreshToken(userId)
+	refreshToken, err = GenerateRefreshToken(userId)
 	if err != nil {
-		return "", "", err
+		return
 	}
 
-	return accessToken, refreshToken, nil
+	return
 }
 
 // This func will be used when inviting new users, etc.

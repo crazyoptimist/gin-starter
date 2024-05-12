@@ -10,6 +10,10 @@ type LoginDto struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type LogoutDto struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
 type RegisterDto struct {
 	FirstName            string `json:"firstName"`
 	LastName             string `json:"lastName"`
