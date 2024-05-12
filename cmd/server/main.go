@@ -29,10 +29,10 @@ func main() {
 		log.Fatalln("Database connection failed: ", err)
 	}
 
-	if err := config.ConnectCacheDB(); err != nil {
+	if err := config.ConnectRedis(); err != nil {
 		log.Fatalln("Cache DB connection failed: ", err)
 	}
-	defer config.Config.CacheClient.Close()
+	defer config.Config.RedisClient.Close()
 
 	appLogger, err := logger.InitAppLogger()
 	if err != nil {

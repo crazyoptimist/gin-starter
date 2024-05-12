@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -98,9 +99,8 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 	})
 
 	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
+		if errors.Is(err, jwt.ErrSignatureInvalid) {
 			logger.Logger.Info(err)
-			return
 		}
 		return
 	}

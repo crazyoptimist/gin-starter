@@ -1,27 +1,29 @@
 package helper
 
 import (
-	"errors"
+	"context"
 	"fmt"
-
-	badger "github.com/dgraph-io/badger/v4"
 
 	"gin-starter/internal/config"
 )
 
-const BLACKLISTED_TOKEN_PREFIX = "bl"
+const BLACKLISTED_TOKEN_PREFIX = "blacklist:"
 
 func BlacklistToken(token string) error {
+	ctx := context.Background()
 	key := fmt.Sprintf("%s:%s", BLACKLISTED_TOKEN_PREFIX, token)
-	return SetCacheValue(key, "true", config.Config.JwtRefreshTokenExpiresIn)
+	return config.Config.RedisClient.Set(
+		ctx,
+		key,
+		"true",
+		config.Config.JwtRefreshTokenExpiresIn,
+	).Err()
 }
 
 func IsTokenBlacklisted(token string) (bool, error) {
+	ctx := context.Background()
 	key := fmt.Sprintf("%s:%s", BLACKLISTED_TOKEN_PREFIX, token)
-	val, err := GetCacheValue(key)
-	if errors.Is(err, badger.ErrKeyNotFound) {
-		return false, nil
-	}
+	val, _ := config.Config.RedisClient.Get(ctx, key).Result()
 
 	if val != "" {
 		return true, nil

@@ -1,10 +1,11 @@
 package config
 
 import (
+	"context"
 	"os"
 	"time"
 
-	badger "github.com/dgraph-io/badger/v4"
+	"github.com/redis/go-redis/v9"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -14,7 +15,7 @@ var Config appConfig
 
 type appConfig struct {
 	DB          *gorm.DB
-	CacheClient *badger.DB
+	RedisClient *redis.Client
 
 	ServerPort               int           `mapstructure:"SERVER_PORT"`
 	DSN                      string        `mapstructure:"DSN"`
@@ -22,6 +23,7 @@ type appConfig struct {
 	JwtRefreshTokenSecret    string        `mapstructure:"JWT_REFRESH_TOKEN_SECRET"`
 	JwtAccessTokenExpiresIn  time.Duration `mapstructure:"JWT_ACCESS_TOKEN_EXPIRES_IN"`
 	JwtRefreshTokenExpiresIn time.Duration `mapstructure:"JWT_REFRESH_TOKEN_EXPIRES_IN"`
+	RedisUrl                 string        `mapstructure:"REDIS_URL"`
 }
 
 func LoadConfig(cfgFile string) error {
@@ -61,15 +63,15 @@ func ConnectDB() error {
 	return nil
 }
 
-func ConnectCacheDB() error {
-	cacheDb, err := badger.Open(
-		// nil disables logging
-		badger.DefaultOptions("").WithInMemory(true).WithLogger(nil),
-	)
+func ConnectRedis() error {
+	rdb := redis.NewClient(&redis.Options{Addr: Config.RedisUrl})
+
+	ctx := context.Background()
+	err := rdb.Set(ctx, "ping", "pong", time.Second).Err()
 	if err != nil {
 		return err
 	}
 
-	Config.CacheClient = cacheDb
+	Config.RedisClient = rdb
 	return nil
 }
