@@ -30,12 +30,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// TODO: Implement a token blacklist for logout, using Redis or another in-memory db.
-		// if helper.IsBlacklistedJWT(accessToken) {
-		// 	utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token"})
-		// 	return
-		// }
-
 		claims := jwt.MapClaims{}
 		parsedToken, err := jwt.ParseWithClaims(accessToken, claims, func(token *jwt.Token) (interface{}, error) {
 			return []byte(config.Config.JwtAccessTokenSecret), nil

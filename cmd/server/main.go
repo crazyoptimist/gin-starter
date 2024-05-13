@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"gin-starter/internal/config"
-	"gin-starter/internal/logger"
 	"gin-starter/internal/router"
 )
 
@@ -33,12 +32,6 @@ func main() {
 		log.Fatalln("Cache DB connection failed: ", err)
 	}
 	defer config.Config.RedisClient.Close()
-
-	appLogger, err := logger.InitAppLogger()
-	if err != nil {
-		log.Fatalln("Logger initialization failed: ", err)
-	}
-	defer appLogger.Instance.Sync()
 
 	r := router.RegisterRoutes()
 	router.SetupSwagger(r)

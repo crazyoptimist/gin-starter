@@ -37,7 +37,6 @@ type SortParam struct {
 	Order     string
 }
 
-// GetSortParams groups multi-field sort params and returns the params slice
 func GetSortParams(c *gin.Context) []SortParam {
 	fieldsString, hasSortFields := c.GetQuery("_sort")
 	ordersString, hasSortOrders := c.GetQuery("_order")
@@ -79,7 +78,7 @@ func GetSortParams(c *gin.Context) []SortParam {
 }
 
 // We must handle the actual value types in the query composition
-// We only support "eq" operator for now
+// We only support "eq" operator for now (add a field to support different operators)
 type FilterParam struct {
 	FieldName string
 	Value     string

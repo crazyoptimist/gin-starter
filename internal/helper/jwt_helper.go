@@ -1,7 +1,6 @@
 package helper
 
 import (
-	"errors"
 	"net/http"
 	"strconv"
 	"time"
@@ -9,7 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"gin-starter/internal/config"
-	"gin-starter/internal/logger"
+	"gin-starter/pkg/common"
 	"gin-starter/pkg/utils"
 )
 
@@ -99,9 +98,7 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 	})
 
 	if err != nil {
-		if errors.Is(err, jwt.ErrSignatureInvalid) {
-			logger.Logger.Info(err)
-		}
+		common.Logger.Error("JWT validation failed: ", err)
 		return
 	}
 
