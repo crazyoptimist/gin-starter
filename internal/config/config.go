@@ -19,11 +19,11 @@ type appConfig struct {
 
 	ServerPort               int           `mapstructure:"SERVER_PORT"`
 	DSN                      string        `mapstructure:"DSN"`
+	RedisUrl                 string        `mapstructure:"REDIS_URL"`
 	JwtAccessTokenSecret     string        `mapstructure:"JWT_ACCESS_TOKEN_SECRET"`
 	JwtRefreshTokenSecret    string        `mapstructure:"JWT_REFRESH_TOKEN_SECRET"`
 	JwtAccessTokenExpiresIn  time.Duration `mapstructure:"JWT_ACCESS_TOKEN_EXPIRES_IN"`
 	JwtRefreshTokenExpiresIn time.Duration `mapstructure:"JWT_REFRESH_TOKEN_EXPIRES_IN"`
-	RedisUrl                 string        `mapstructure:"REDIS_URL"`
 }
 
 func LoadConfig(cfgFile string) error {
@@ -35,6 +35,7 @@ func LoadConfig(cfgFile string) error {
 	if os.Getenv("TWELVE_FACTOR_MODE") == "true" {
 		v.AutomaticEnv()
 		v.BindEnv("DSN")
+		v.BindEnv("REDIS_URL")
 		v.BindEnv("JWT_ACCESS_TOKEN_SECRET")
 		v.BindEnv("JWT_REFRESH_TOKEN_SECRET")
 		v.BindEnv("JWT_ACCESS_TOKEN_EXPIRES_IN")
