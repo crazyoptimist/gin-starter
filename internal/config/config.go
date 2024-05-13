@@ -37,7 +37,7 @@ func LoadConfig(cfgFile string) error {
 		v.BindEnv("DSN")
 		v.BindEnv("JWT_ACCESS_TOKEN_SECRET")
 		v.BindEnv("JWT_REFRESH_TOKEN_SECRET")
-		v.BindEnv("JWT_ACCESS_TOKEN__EXPIRES_IN")
+		v.BindEnv("JWT_ACCESS_TOKEN_EXPIRES_IN")
 		v.BindEnv("JWT_REFRESH_TOKEN_EXPIRES_IN")
 
 		return v.Unmarshal(&Config)
