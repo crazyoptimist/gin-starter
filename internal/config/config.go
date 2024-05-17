@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"errors"
 	"os"
 	"time"
 
@@ -26,6 +27,18 @@ type appConfig struct {
 	JwtRefreshTokenExpiresIn time.Duration `mapstructure:"JWT_REFRESH_TOKEN_EXPIRES_IN"`
 }
 
+func (c *appConfig) Validate() error {
+	if c.DSN == "" ||
+		c.RedisUrl == "" ||
+		len(c.JwtAccessTokenSecret) < 16 ||
+		len(c.JwtRefreshTokenSecret) < 16 ||
+		c.JwtAccessTokenExpiresIn == 0 ||
+		c.JwtRefreshTokenExpiresIn == 0 {
+		return errors.New("Environment variables validation failed.")
+	}
+	return nil
+}
+
 func LoadConfig(cfgFile string) error {
 	v := viper.New()
 
@@ -41,7 +54,11 @@ func LoadConfig(cfgFile string) error {
 		v.BindEnv("JWT_ACCESS_TOKEN_EXPIRES_IN")
 		v.BindEnv("JWT_REFRESH_TOKEN_EXPIRES_IN")
 
-		return v.Unmarshal(&Config)
+		if err := v.Unmarshal(&Config); err != nil {
+			return err
+		}
+
+		return Config.Validate()
 	}
 
 	v.SetConfigType("env")
@@ -51,7 +68,11 @@ func LoadConfig(cfgFile string) error {
 		return err
 	}
 
-	return v.Unmarshal(&Config)
+	if err := v.Unmarshal(&Config); err != nil {
+		return err
+	}
+
+	return Config.Validate()
 }
 
 func ConnectDB() error {

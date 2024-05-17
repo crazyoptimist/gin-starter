@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 
 	"gin-starter/internal/config"
@@ -31,11 +30,11 @@ func main() {
 	}
 
 	if err := config.LoadConfig(".env"); err != nil {
-		log.Fatalln(`Please make sure .env file exists or env variable TWELVE_FACTOR_MODE is set to "true": `, err)
+		log.Fatalf("Loading application config failed: %v", err)
 	}
 
 	if err := config.ConnectDB(); err != nil {
-		log.Fatalln("Error: database connection failed: ", err)
+		log.Fatalf("Database connection failed: %v", err)
 	}
 
 	if *migrate {
@@ -44,8 +43,7 @@ func main() {
 
 	if *seed {
 		if *email == "" || *password == "" {
-			fmt.Println("Error: Both email and password must be provided for seeding.")
-			return
+			log.Fatalln("Error: Both email and password must be provided for seeding.")
 		}
 		seedAdmin(*email, *password)
 	}
@@ -55,7 +53,7 @@ func runMigration() {
 	if err := config.Config.DB.AutoMigrate(&model.User{}); err != nil {
 		log.Fatalln("Database migration failed: ", err)
 	}
-	fmt.Println("Database migration was successful.")
+	log.Println("Database migration was successful.")
 }
 
 func seedAdmin(email, password string) {
@@ -68,8 +66,8 @@ func seedAdmin(email, password string) {
 		Password: hashedPassword,
 	})
 	if err != nil {
-		log.Fatalln("Seeding admin user failed: ", err)
+		log.Fatalf("Seeding admin user failed: %v", err)
 	}
 
-	log.Printf("Seeding was successful: %+v", user)
+	log.Printf("Seeding was successful: %s", user.Email)
 }

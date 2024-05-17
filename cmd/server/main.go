@@ -21,15 +21,15 @@ import (
 func main() {
 
 	if err := config.LoadConfig(".env"); err != nil {
-		log.Fatalln(`Please make sure .env file exists or env variable TWELVE_FACTOR_MODE is set to "true": `, err)
+		log.Fatalf("Loading application config failed: %v", err)
 	}
 
 	if err := config.ConnectDB(); err != nil {
-		log.Fatalln("Database connection failed: ", err)
+		log.Fatalf("Database connection failed: %v", err)
 	}
 
 	if err := config.ConnectRedis(); err != nil {
-		log.Fatalln("Cache DB connection failed: ", err)
+		log.Fatalf("Cache DB connection failed: %v", err)
 	}
 	defer config.Config.RedisClient.Close()
 
@@ -56,7 +56,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	if err := server.Shutdown(ctx); err != nil {
-		log.Fatal("HTTP server shutdown failed: ", err)
+		log.Fatalf("HTTP server shutdown failed: %v", err)
 	}
 	log.Println("Graceful shutdown finished.")
 }
