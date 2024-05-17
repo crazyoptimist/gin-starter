@@ -19,9 +19,11 @@ vendor
 # Other files
 .git
 .github
+deployments
 testdata
 .air.toml
 .env
 .gitignore
+LICENSE
 Makefile
 README.md
