@@ -95,10 +95,13 @@ func GetFilterParams(c *gin.Context) []FilterParam {
 		if slices.Contains(paginationAndSortKeys, key) {
 			continue
 		}
-		filterParams = append(filterParams, FilterParam{
-			FieldName: key,
-			Value:     val[0],
-		})
+
+		for _, item := range val {
+			filterParams = append(filterParams, FilterParam{
+				FieldName: key,
+				Value:     item,
+			})
+		}
 	}
 
 	return filterParams
