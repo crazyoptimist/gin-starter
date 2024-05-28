@@ -1,8 +1,8 @@
 package auth
 
 type LoginResponse struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 type LoginDto struct {
@@ -11,7 +11,7 @@ type LoginDto struct {
 }
 
 type LogoutDto struct {
-	RefreshToken string `json:"refresh_token" binding:"required"`
+	RefreshToken string `json:"refreshToken" binding:"required"`
 }
 
 type RegisterDto struct {
