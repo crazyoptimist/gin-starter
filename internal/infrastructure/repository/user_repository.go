@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"gin-starter/internal/model"
-	"gin-starter/pkg/utils"
+	"gin-starter/internal/domain/model"
+	"gin-starter/internal/domain/user"
+	"gin-starter/pkg/common"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -12,14 +13,16 @@ type userRepository struct {
 	DB *gorm.DB
 }
 
+var _ user.UserRepository = (*userRepository)(nil)
+
 func NewUserRepository(DB *gorm.DB) *userRepository {
 	return &userRepository{DB: DB}
 }
 
 func (u *userRepository) FindAll(
-	paginationParam utils.PaginationParam,
-	sortParams []utils.SortParam,
-	filterParams []utils.FilterParam,
+	paginationParam common.PaginationParam,
+	sortParams []common.SortParam,
+	filterParams []common.FilterParam,
 ) ([]model.User, int64, error) {
 	query := u.DB.Model(&model.User{})
 
@@ -56,7 +59,7 @@ func (u *userRepository) FindAll(
 			query = query.Order("first_name " + sortParam.Order)
 		}
 		if sortParam.FieldName == "lastName" {
-			query = query.Order("last_name" + sortParam.Order)
+			query = query.Order("last_name " + sortParam.Order)
 		}
 	}
 

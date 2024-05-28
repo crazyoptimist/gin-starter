@@ -7,33 +7,20 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"gin-starter/internal/dto"
-	"gin-starter/internal/model"
-	"gin-starter/internal/repository"
-	"gin-starter/internal/service"
+	"gin-starter/internal/domain/user"
+	"gin-starter/internal/infrastructure/repository"
+	"gin-starter/pkg/common"
 	"gin-starter/pkg/utils"
 )
 
-type UserService interface {
-	FindAll(
-		paginationParam utils.PaginationParam,
-		sortParams []utils.SortParam,
-		filterParams []utils.FilterParam,
-	) ([]model.User, int64, error)
-	FindById(id uint) (*model.User, error)
-	Create(createUserDto *dto.CreateUserDto) (*model.User, error)
-	Update(updateUserDto *dto.UpdateUserDto, id uint) (*model.User, error)
-	Delete(id uint) error
-}
-
 type userController struct {
-	UserService
+	UserService user.UserService
 }
 
 func NewUserController(db *gorm.DB) *userController {
 	userRepository := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepository)
-	return &userController{UserService: userService}
+	userService := user.NewUserService(userRepository)
+	return &userController{UserService: *userService}
 }
 
 // FindAll godoc
@@ -44,11 +31,15 @@ func NewUserController(db *gorm.DB) *userController {
 // @Router /users [get]
 // @Security JWT
 func (u *userController) FindAll(c *gin.Context) {
-	paginationParam := utils.GetPaginationParam(c)
-	sortParams := utils.GetSortParams(c)
-	filterParams := utils.GetFilterParams(c)
+	paginationParam := common.GetPaginationParam(c)
+	sortParams := common.GetSortParams(c)
+	filterParams := common.GetFilterParams(c)
 
-	users, totalCount, err := u.UserService.FindAll(paginationParam, sortParams, filterParams)
+	users, totalCount, err := u.UserService.FindAll(
+		paginationParam,
+		sortParams,
+		filterParams,
+	)
 	if err != nil {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
@@ -88,14 +79,14 @@ func (u *userController) FindById(c *gin.Context) {
 // Create godoc
 // @Summary Create a new user
 // @Tags users
-// @Param request body dto.CreateUserDto true "CreateUserDto"
+// @Param request body user.CreateUserDto true "CreateUserDto"
 // @Success 201	{object} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError
 // @Router /users [post]
 // @Security JWT
 func (u *userController) Create(c *gin.Context) {
-	var createUserDto dto.CreateUserDto
+	var createUserDto user.CreateUserDto
 	if err := c.BindJSON(&createUserDto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
@@ -134,7 +125,7 @@ func (u *userController) Me(c *gin.Context) {
 // @Summary Update user
 // @Tags users
 // @Param id path integer true "User ID"
-// @Param request body dto.CreateUserDto true "UpdateUserDto"
+// @Param request body user.UpdateUserDto true "UpdateUserDto"
 // @Success 200	{object} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 404 {object} utils.HttpError
@@ -153,7 +144,7 @@ func (u *userController) Update(c *gin.Context) {
 		return
 	}
 
-	var updateUserDto dto.UpdateUserDto
+	var updateUserDto user.UpdateUserDto
 	if err := c.BindJSON(&updateUserDto); err != nil {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return

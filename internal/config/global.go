@@ -12,9 +12,9 @@ import (
 	"gorm.io/gorm"
 )
 
-var Config appConfig
+var Global AppConfig
 
-type appConfig struct {
+type AppConfig struct {
 	DB          *gorm.DB
 	RedisClient *redis.Client
 
@@ -27,7 +27,7 @@ type appConfig struct {
 	JwtRefreshTokenExpiresIn time.Duration `mapstructure:"JWT_REFRESH_TOKEN_EXPIRES_IN"`
 }
 
-func (c *appConfig) Validate() error {
+func (c *AppConfig) Validate() error {
 	if c.DSN == "" ||
 		c.RedisUrl == "" ||
 		len(c.JwtAccessTokenSecret) < 16 ||
@@ -54,11 +54,11 @@ func LoadConfig(cfgFile string) error {
 		v.BindEnv("JWT_ACCESS_TOKEN_EXPIRES_IN")
 		v.BindEnv("JWT_REFRESH_TOKEN_EXPIRES_IN")
 
-		if err := v.Unmarshal(&Config); err != nil {
+		if err := v.Unmarshal(&Global); err != nil {
 			return err
 		}
 
-		return Config.Validate()
+		return Global.Validate()
 	}
 
 	v.SetConfigType("env")
@@ -68,25 +68,25 @@ func LoadConfig(cfgFile string) error {
 		return err
 	}
 
-	if err := v.Unmarshal(&Config); err != nil {
+	if err := v.Unmarshal(&Global); err != nil {
 		return err
 	}
 
-	return Config.Validate()
+	return Global.Validate()
 }
 
 func ConnectDB() error {
-	db, err := gorm.Open(postgres.Open(Config.DSN), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(Global.DSN), &gorm.Config{})
 	if err != nil {
 		return err
 	}
 
-	Config.DB = db
+	Global.DB = db
 	return nil
 }
 
 func ConnectRedis() error {
-	rdb := redis.NewClient(&redis.Options{Addr: Config.RedisUrl})
+	rdb := redis.NewClient(&redis.Options{Addr: Global.RedisUrl})
 
 	ctx := context.Background()
 	err := rdb.Set(ctx, "ping", "pong", time.Second).Err()
@@ -94,6 +94,6 @@ func ConnectRedis() error {
 		return err
 	}
 
-	Config.RedisClient = rdb
+	Global.RedisClient = rdb
 	return nil
 }

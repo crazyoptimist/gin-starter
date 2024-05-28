@@ -1,4 +1,4 @@
-package helper
+package auth
 
 import (
 	"net/http"
@@ -19,8 +19,8 @@ const (
 
 func GenerateAccessToken(userId uint) (string, error) {
 
-	secretKey := []byte(config.Config.JwtAccessTokenSecret)
-	expiresIn := config.Config.JwtAccessTokenExpiresIn
+	secretKey := []byte(config.Global.JwtAccessTokenSecret)
+	expiresIn := config.Global.JwtAccessTokenExpiresIn
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Header["kid"] = AccessTokenKeyId
@@ -41,8 +41,8 @@ func GenerateAccessToken(userId uint) (string, error) {
 
 func GenerateRefreshToken(userId uint) (string, error) {
 
-	secretKey := []byte(config.Config.JwtRefreshTokenSecret)
-	expiresIn := config.Config.JwtRefreshTokenExpiresIn
+	secretKey := []byte(config.Global.JwtRefreshTokenSecret)
+	expiresIn := config.Global.JwtRefreshTokenExpiresIn
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	token.Header["kid"] = RefreshTokenKeyId
@@ -76,26 +76,29 @@ func GenerateTokenPair(userId uint) (accessToken, refreshToken string, err error
 	return
 }
 
-// This func will be used when inviting new users, etc.
 func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, err error) {
 
 	var key []byte
 
 	claims := jwt.MapClaims{}
 
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(
+		tokenString,
+		claims,
+		func(token *jwt.Token) (interface{}, error) {
 
-		keyId = uint(token.Header["kid"].(float64))
+			// TODO: refactor
+			keyId = uint(token.Header["kid"].(float64))
 
-		switch keyId {
-		case AccessTokenKeyId:
-			key = []byte(config.Config.JwtAccessTokenSecret)
-		case RefreshTokenKeyId:
-			key = []byte(config.Config.JwtRefreshTokenSecret)
-		}
+			switch keyId {
+			case AccessTokenKeyId:
+				key = []byte(config.Global.JwtAccessTokenSecret)
+			case RefreshTokenKeyId:
+				key = []byte(config.Global.JwtRefreshTokenSecret)
+			}
 
-		return key, nil
-	})
+			return key, nil
+		})
 
 	if err != nil {
 		common.Logger.Error("JWT validation failed: ", err)

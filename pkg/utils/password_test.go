@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,22 +9,19 @@ import (
 func TestHashPassword(t *testing.T) {
 	t.Run("Hash password", func(t *testing.T) {
 		password := "test*password"
-		hashedPassword, err := HashPassword(password)
-		assert.NoError(t, err)
+		_, err := HashPassword(password)
 
-		os.Setenv("password", password)
-		os.Setenv("hashedPassword", hashedPassword)
+		assert.NoError(t, err)
 	})
 }
 
 func TestVerifyPassword(t *testing.T) {
 	t.Run("Verify password", func(t *testing.T) {
-		password := os.Getenv("password")
-		hashedPassword := os.Getenv("hashedPassword")
+		password := "test*password"
+		hashedPassword, _ := HashPassword(password)
 
 		err := VerifyPassword(hashedPassword, password)
+
 		assert.NoError(t, err)
-		os.Unsetenv("password")
-		os.Unsetenv("hashedPassword")
 	})
 }
