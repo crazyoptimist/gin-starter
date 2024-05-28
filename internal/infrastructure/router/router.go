@@ -9,7 +9,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	docs "gin-starter/docs"
-	"gin-starter/internal/middleware"
+	"gin-starter/internal/infrastructure/middleware"
 )
 
 func RegisterRoutes() *gin.Engine {

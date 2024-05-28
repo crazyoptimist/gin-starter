@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"gin-starter/internal/config"
-	"gin-starter/internal/router"
+	"gin-starter/internal/infrastructure/router"
 )
 
 // We don't actually use API key, but OpenAPI v2 enforces this way
@@ -31,13 +31,13 @@ func main() {
 	if err := config.ConnectRedis(); err != nil {
 		log.Fatalf("Cache DB connection failed: %v", err)
 	}
-	defer config.Config.RedisClient.Close()
+	defer config.Global.RedisClient.Close()
 
 	r := router.RegisterRoutes()
 	router.SetupSwagger(r)
 
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%v", config.Config.ServerPort),
+		Addr:    fmt.Sprintf(":%v", config.Global.ServerPort),
 		Handler: r,
 	}
 

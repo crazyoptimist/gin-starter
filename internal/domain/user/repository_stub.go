@@ -1,9 +1,9 @@
-package service
+package user
 
 import (
 	"errors"
 
-	"gin-starter/internal/model"
+	"gin-starter/internal/domain/model"
 	"gin-starter/pkg/common"
 	"gin-starter/pkg/utils"
 )
@@ -17,16 +17,28 @@ var _ UserRepository = (*userRepositoryStub)(nil)
 func NewUserRepositoryStub() *userRepositoryStub {
 	return &userRepositoryStub{
 		records: []model.User{
-			{BaseModel: common.BaseModel{ID: 1}, FirstName: "John", LastName: "Smith", Email: "john.smith@gmail.com", Password: "password"},
-			{BaseModel: common.BaseModel{ID: 2}, FirstName: "Ben", LastName: "Doe", Email: "ben.doe@gmail.com", Password: "password"},
+			{
+				Common:    model.Common{ID: 1},
+				FirstName: "John",
+				LastName:  "Smith",
+				Email:     "john.smith@gmail.com",
+				Password:  "password",
+			},
+			{
+				Common:    model.Common{ID: 2},
+				FirstName: "Ben",
+				LastName:  "Doe",
+				Email:     "ben.doe@gmail.com",
+				Password:  "password",
+			},
 		},
 	}
 }
 
 func (r *userRepositoryStub) FindAll(
-	paginationParam utils.PaginationParam,
-	sortParams []utils.SortParam,
-	filterParams []utils.FilterParam,
+	paginationParam common.PaginationParam,
+	sortParams []common.SortParam,
+	filterParams []common.FilterParam,
 ) ([]model.User, int64, error) {
 	return r.records, 2, nil
 }
@@ -37,7 +49,7 @@ func (r *userRepositoryStub) FindById(id uint) (*model.User, error) {
 			return &record, nil
 		}
 	}
-	return nil, errors.New("User not found with given ID")
+	return nil, errors.New("User not found with the given ID")
 }
 
 func (r *userRepositoryStub) FindByEmail(email string) (*model.User, error) {
@@ -46,7 +58,7 @@ func (r *userRepositoryStub) FindByEmail(email string) (*model.User, error) {
 			return &record, nil
 		}
 	}
-	return nil, errors.New("User not found with given Email")
+	return nil, errors.New("User not found with the given Email")
 }
 
 func (r *userRepositoryStub) Create(user model.User) (*model.User, error) {
@@ -65,6 +77,6 @@ func (r *userRepositoryStub) Update(user model.User) (*model.User, error) {
 }
 
 func (r *userRepositoryStub) Delete(user model.User) error {
-	utils.RemoveAt(r.records, int(user.ID))
+	utils.RemoveByIndex(r.records, int(user.ID))
 	return nil
 }

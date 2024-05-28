@@ -1,10 +1,9 @@
-package dto
+package user
 
 import (
 	"github.com/google/uuid"
 
-	"gin-starter/internal/model"
-	"gin-starter/pkg/common"
+	"gin-starter/internal/domain/model"
 	"gin-starter/pkg/utils"
 )
 
@@ -40,7 +39,7 @@ func MapUpdateUserDto(dto *UpdateUserDto, id uint) model.User {
 	}
 
 	return model.User{
-		BaseModel: common.BaseModel{ID: id},
+		Common:    model.Common{ID: id},
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
 		Email:     dto.Email,

@@ -32,7 +32,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		claims := jwt.MapClaims{}
 		parsedToken, err := jwt.ParseWithClaims(accessToken, claims, func(token *jwt.Token) (interface{}, error) {
-			return []byte(config.Config.JwtAccessTokenSecret), nil
+			return []byte(config.Global.JwtAccessTokenSecret), nil
 		})
 
 		if err != nil {

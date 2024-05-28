@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"gin-starter/internal/config"
-	"gin-starter/internal/model"
-	"gin-starter/internal/repository"
+	"gin-starter/internal/domain/model"
+	"gin-starter/internal/infrastructure/repository"
 	"gin-starter/pkg/utils"
 )
 
@@ -50,7 +50,7 @@ func main() {
 }
 
 func runMigration() {
-	if err := config.Config.DB.AutoMigrate(&model.User{}); err != nil {
+	if err := config.Global.DB.AutoMigrate(&model.User{}); err != nil {
 		log.Fatalln("Database migration failed: ", err)
 	}
 	log.Println("Database migration was successful.")
@@ -59,7 +59,7 @@ func runMigration() {
 func seedAdmin(email, password string) {
 	hashedPassword, _ := utils.HashPassword(password)
 
-	userReposiroty := repository.NewUserRepository(config.Config.DB)
+	userReposiroty := repository.NewUserRepository(config.Global.DB)
 
 	user, err := userReposiroty.Create(model.User{
 		Email:    email,

@@ -1,4 +1,4 @@
-package helper
+package auth
 
 import (
 	"os"
@@ -12,7 +12,7 @@ import (
 
 func TestGenerateAccessToken(t *testing.T) {
 	workdir, _ := os.Getwd()
-	envpath := "../../.env"
+	envpath := "../../../.env"
 	_ = config.LoadConfig(filepath.Join(workdir, envpath))
 
 	t.Run("Generate a valid access token", func(t *testing.T) {

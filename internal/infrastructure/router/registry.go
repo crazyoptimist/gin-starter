@@ -4,12 +4,12 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"gin-starter/internal/config"
-	"gin-starter/internal/controller"
-	"gin-starter/internal/middleware"
+	"gin-starter/internal/infrastructure/controller"
+	"gin-starter/internal/infrastructure/middleware"
 )
 
 func RegisterAuthRoutes(g *gin.RouterGroup) {
-	controllers := controller.NewAuthController(config.Config.DB)
+	controllers := controller.NewAuthController(config.Global.DB)
 	g.POST("/register", controllers.Register)
 	g.POST("/login", controllers.Login)
 	g.POST("/logout", controllers.Logout, middleware.AuthMiddleware())
@@ -17,7 +17,7 @@ func RegisterAuthRoutes(g *gin.RouterGroup) {
 }
 
 func RegisterUserRoutes(g *gin.RouterGroup) {
-	controllers := controller.NewUserController(config.Config.DB)
+	controllers := controller.NewUserController(config.Global.DB)
 	g.GET("", controllers.FindAll)
 	g.GET("me", controllers.Me)
 	g.GET(":id", controllers.FindById)
