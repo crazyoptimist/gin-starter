@@ -2,15 +2,13 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
 	"gin-starter/internal/config"
-	"gin-starter/internal/infrastructure/router"
+	"gin-starter/internal/infrastructure/server"
 )
 
 // We don't actually use API key, but OpenAPI v2 enforces this way
@@ -33,17 +31,11 @@ func main() {
 	}
 	defer config.Global.RedisClient.Close()
 
-	r := router.RegisterRoutes()
-	router.SetupSwagger(r)
-
-	server := &http.Server{
-		Addr:    fmt.Sprintf(":%v", config.Global.ServerPort),
-		Handler: r,
-	}
+	httpServer := server.NewServer()
 
 	go func() {
-		if err := server.ListenAndServe(); err != nil {
-			log.Println(err)
+		if err := httpServer.ListenAndServe(); err != nil {
+			log.Fatalf("HTTP server startup failed: %v", err)
 		}
 	}()
 
@@ -55,7 +47,7 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	if err := server.Shutdown(ctx); err != nil {
+	if err := httpServer.Shutdown(ctx); err != nil {
 		log.Fatalf("HTTP server shutdown failed: %v", err)
 	}
 	log.Println("Graceful shutdown finished.")

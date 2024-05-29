@@ -87,7 +87,6 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 		claims,
 		func(token *jwt.Token) (interface{}, error) {
 
-			// TODO: refactor
 			keyId = uint(token.Header["kid"].(float64))
 
 			switch keyId {
@@ -98,7 +97,8 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 			}
 
 			return key, nil
-		})
+		},
+	)
 
 	if err != nil {
 		common.Logger.Error("JWT validation failed: ", err)

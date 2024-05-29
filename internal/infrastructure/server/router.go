@@ -1,4 +1,4 @@
-package router
+package server
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,7 +8,7 @@ import (
 	"gin-starter/internal/infrastructure/middleware"
 )
 
-func RegisterAuthRoutes(g *gin.RouterGroup) {
+func registerAuthRoutes(g *gin.RouterGroup) {
 	controllers := controller.NewAuthController(config.Global.DB)
 	g.POST("/register", controllers.Register)
 	g.POST("/login", controllers.Login)
@@ -16,7 +16,7 @@ func RegisterAuthRoutes(g *gin.RouterGroup) {
 	g.POST("/refresh", controllers.RefreshToken)
 }
 
-func RegisterUserRoutes(g *gin.RouterGroup) {
+func registerUserRoutes(g *gin.RouterGroup) {
 	controllers := controller.NewUserController(config.Global.DB)
 	g.GET("", controllers.FindAll)
 	g.GET("me", controllers.Me)

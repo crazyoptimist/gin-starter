@@ -1,16 +1,5 @@
 definitions:
-  dto.CreateUserDto:
-    properties:
-      email:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-    required:
-    - email
-    type: object
-  dto.LoginDto:
+  auth.LoginDto:
     properties:
       email:
         type: string
@@ -20,21 +9,21 @@ definitions:
     - email
     - password
     type: object
-  dto.LoginResponse:
+  auth.LoginResponse:
     properties:
-      access_token:
+      accessToken:
         type: string
-      refresh_token:
+      refreshToken:
         type: string
     type: object
-  dto.LogoutDto:
+  auth.LogoutDto:
     properties:
-      refresh_token:
+      refreshToken:
         type: string
     required:
-    - refresh_token
+    - refreshToken
     type: object
-  dto.RegisterDto:
+  auth.RegisterDto:
     properties:
       email:
         type: string
@@ -53,9 +42,9 @@ definitions:
     type: object
   model.User:
     properties:
-      created_at:
+      createdAt:
         type: string
-      deleted_at:
+      deletedAt:
         type: string
       email:
         type: string
@@ -65,7 +54,29 @@ definitions:
         type: integer
       lastName:
         type: string
-      updated_at:
+      updatedAt:
+        type: string
+    type: object
+  user.CreateUserDto:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+    required:
+    - email
+    type: object
+  user.UpdateUserDto:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      password:
         type: string
     type: object
   utils.HttpError:
@@ -88,12 +99,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.LoginDto'
+          $ref: '#/definitions/auth.LoginDto'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.LoginResponse'
+            $ref: '#/definitions/auth.LoginResponse'
         "400":
           description: Bad Request
           schema:
@@ -135,12 +146,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.LogoutDto'
+          $ref: '#/definitions/auth.LogoutDto'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.LoginResponse'
+            $ref: '#/definitions/auth.LoginResponse'
         "400":
           description: Bad Request
           schema:
@@ -160,12 +171,12 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.RegisterDto'
+          $ref: '#/definitions/auth.RegisterDto'
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.LoginResponse'
+            $ref: '#/definitions/auth.LoginResponse'
         "400":
           description: Bad Request
           schema:
@@ -202,7 +213,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateUserDto'
+          $ref: '#/definitions/user.CreateUserDto'
       responses:
         "201":
           description: Created
@@ -282,7 +293,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/dto.CreateUserDto'
+          $ref: '#/definitions/user.UpdateUserDto'
       responses:
         "200":
           description: OK
@@ -324,7 +335,7 @@ paths:
       - JWT: []
       summary: Get my profile
       tags:
-      - auth
+      - users
 securityDefinitions:
   JWT:
     in: header

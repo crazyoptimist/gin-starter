@@ -28,7 +28,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginDto"
+                            "$ref": "#/definitions/auth.LoginDto"
                         }
                     }
                 ],
@@ -36,7 +36,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginResponse"
+                            "$ref": "#/definitions/auth.LoginResponse"
                         }
                     },
                     "400": {
@@ -103,7 +103,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LogoutDto"
+                            "$ref": "#/definitions/auth.LogoutDto"
                         }
                     }
                 ],
@@ -111,7 +111,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginResponse"
+                            "$ref": "#/definitions/auth.LoginResponse"
                         }
                     },
                     "400": {
@@ -142,7 +142,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RegisterDto"
+                            "$ref": "#/definitions/auth.RegisterDto"
                         }
                     }
                 ],
@@ -150,7 +150,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginResponse"
+                            "$ref": "#/definitions/auth.LoginResponse"
                         }
                     },
                     "400": {
@@ -214,7 +214,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateUserDto"
+                            "$ref": "#/definitions/user.CreateUserDto"
                         }
                     }
                 ],
@@ -248,7 +248,7 @@ const docTemplate = `{
                     }
                 ],
                 "tags": [
-                    "auth"
+                    "users"
                 ],
                 "summary": "Get my profile",
                 "responses": {
@@ -375,7 +375,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.CreateUserDto"
+                            "$ref": "#/definitions/user.UpdateUserDto"
                         }
                     }
                 ],
@@ -409,24 +409,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.CreateUserDto": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "firstName": {
-                    "type": "string"
-                },
-                "lastName": {
-                    "type": "string"
-                }
-            }
-        },
-        "dto.LoginDto": {
+        "auth.LoginDto": {
             "type": "object",
             "required": [
                 "email",
@@ -441,29 +424,29 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.LoginResponse": {
+        "auth.LoginResponse": {
             "type": "object",
             "properties": {
-                "access_token": {
+                "accessToken": {
                     "type": "string"
                 },
-                "refresh_token": {
+                "refreshToken": {
                     "type": "string"
                 }
             }
         },
-        "dto.LogoutDto": {
+        "auth.LogoutDto": {
             "type": "object",
             "required": [
-                "refresh_token"
+                "refreshToken"
             ],
             "properties": {
-                "refresh_token": {
+                "refreshToken": {
                     "type": "string"
                 }
             }
         },
-        "dto.RegisterDto": {
+        "auth.RegisterDto": {
             "type": "object",
             "required": [
                 "email",
@@ -491,10 +474,10 @@ const docTemplate = `{
         "model.User": {
             "type": "object",
             "properties": {
-                "created_at": {
+                "createdAt": {
                     "type": "string"
                 },
-                "deleted_at": {
+                "deletedAt": {
                     "type": "string"
                 },
                 "email": {
@@ -509,7 +492,41 @@ const docTemplate = `{
                 "lastName": {
                     "type": "string"
                 },
-                "updated_at": {
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.CreateUserDto": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                }
+            }
+        },
+        "user.UpdateUserDto": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "password": {
                     "type": "string"
                 }
             }

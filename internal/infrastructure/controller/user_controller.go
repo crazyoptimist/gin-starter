@@ -103,7 +103,7 @@ func (u *userController) Create(c *gin.Context) {
 
 // Me godoc
 // @Summary Get my profile
-// @Tags auth
+// @Tags users
 // @Success 200	{object} model.User
 // @Failure 400 {object} utils.HttpError
 // @Failure 500 {object} utils.HttpError

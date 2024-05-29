@@ -1,6 +1,7 @@
-package router
+package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -9,10 +10,21 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	docs "gin-starter/docs"
+	"gin-starter/internal/config"
 	"gin-starter/internal/infrastructure/middleware"
 )
 
-func RegisterRoutes() *gin.Engine {
+func NewServer() *http.Server {
+	r := registerRoutes()
+	setupSwagger(r)
+
+	return &http.Server{
+		Addr:    fmt.Sprintf(":%v", config.Global.ServerPort),
+		Handler: r,
+	}
+}
+
+func registerRoutes() *gin.Engine {
 	router := gin.New()
 
 	router.Use(gin.Logger())
@@ -39,15 +51,15 @@ func RegisterRoutes() *gin.Engine {
 	v1 := router.Group("/api")
 	{
 		authGroup := v1.Group("/auth")
-		RegisterAuthRoutes(authGroup)
+		registerAuthRoutes(authGroup)
 		usersGroup := v1.Group("/users", middleware.AuthMiddleware())
-		RegisterUserRoutes(usersGroup)
+		registerUserRoutes(usersGroup)
 	}
 
 	return router
 }
 
-func SetupSwagger(r *gin.Engine) {
+func setupSwagger(r *gin.Engine) {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	docs.SwaggerInfo.BasePath = "/api"
 	docs.SwaggerInfo.Title = "Gin Starter Swagger 2.0"
