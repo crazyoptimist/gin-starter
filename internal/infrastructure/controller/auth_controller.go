@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
+	"gin-starter/internal/config"
 	"gin-starter/internal/domain/auth"
 	"gin-starter/internal/infrastructure/helper"
 	"gin-starter/internal/infrastructure/repository"
@@ -44,6 +45,7 @@ func (a *authController) Register(c *gin.Context) {
 		utils.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
+	loginResponse.ExpiresIn = config.Global.JwtAccessTokenExpiresIn.Seconds()
 
 	c.JSON(http.StatusCreated, loginResponse)
 }
@@ -69,6 +71,7 @@ func (a *authController) Login(c *gin.Context) {
 		utils.RaiseHttpError(c, http.StatusUnauthorized, err)
 		return
 	}
+	loginResponse.ExpiresIn = config.Global.JwtAccessTokenExpiresIn.Seconds()
 
 	c.JSON(http.StatusCreated, loginResponse)
 }
