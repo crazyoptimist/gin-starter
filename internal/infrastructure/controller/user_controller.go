@@ -7,11 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
+	"gin-starter/internal/config"
 	"gin-starter/internal/domain/user"
 	"gin-starter/internal/infrastructure/repository"
 	"gin-starter/pkg/common"
 	"gin-starter/pkg/utils"
 )
+
+const CACHE_KEY_PREFIX_USER = "user:"
 
 type userController struct {
 	UserService user.UserService
@@ -155,6 +158,8 @@ func (u *userController) Update(c *gin.Context) {
 		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
 	}
+
+	config.Global.RedisClient.Del(c, CACHE_KEY_PREFIX_USER+strconv.Itoa(int(user.ID)))
 
 	c.JSON(http.StatusOK, user)
 }

@@ -10,7 +10,7 @@ func RaiseHttpError(ctx *gin.Context, status int, err error) {
 }
 
 type HttpError struct {
-	Code    int    `json:"code" example:"400"`
+	Code    int    `json:"statusCode" example:"400"`
 	Message string `json:"message" example:"bad request"`
 }
 
