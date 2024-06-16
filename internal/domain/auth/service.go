@@ -44,8 +44,8 @@ func (s *AuthService) Register(registerDto *RegisterDto) (*LoginResponse, error)
 	}
 
 	user, err := s.UserRepository.Create(model.User{
-		FirstName: registerDto.FirstName,
-		LastName:  registerDto.LastName,
+		FirstName: &registerDto.FirstName,
+		LastName:  &registerDto.LastName,
 		Email:     registerDto.Email,
 		Password:  registerDto.Password,
 	})

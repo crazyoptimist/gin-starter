@@ -2,8 +2,9 @@ package model
 
 type User struct {
 	Common
-	FirstName string `gorm:"column:first_name" json:"firstName"`
-	LastName  string `gorm:"column:last_name" json:"lastName"`
-	Email     string `gorm:"column:email;unique" json:"email"`
-	Password  string `gorm:"column:password" json:"-"`
+	FirstName    *string `gorm:"column:first_name" json:"firstName"`
+	LastName     *string `gorm:"column:last_name" json:"lastName"`
+	Email        string  `gorm:"column:email;unique" json:"email"`
+	Password     string  `gorm:"column:password" json:"-"`
+	RefreshToken *string `gorm:"column:refresh_token" json:"-"`
 }

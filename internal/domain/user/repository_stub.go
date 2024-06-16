@@ -18,18 +18,14 @@ func NewUserRepositoryStub() *userRepositoryStub {
 	return &userRepositoryStub{
 		records: []model.User{
 			{
-				Common:    model.Common{ID: 1},
-				FirstName: "John",
-				LastName:  "Smith",
-				Email:     "john.smith@gmail.com",
-				Password:  "password",
+				Common:   model.Common{ID: 1},
+				Email:    "john.smith@gmail.com",
+				Password: "password",
 			},
 			{
-				Common:    model.Common{ID: 2},
-				FirstName: "Ben",
-				LastName:  "Doe",
-				Email:     "ben.doe@gmail.com",
-				Password:  "password",
+				Common:   model.Common{ID: 2},
+				Email:    "ben.doe@gmail.com",
+				Password: "password",
 			},
 		},
 	}

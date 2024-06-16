@@ -18,8 +18,8 @@ func MapCreateUserDto(dto *CreateUserDto) model.User {
 	hashedPassword, _ := utils.HashPassword(password)
 
 	return model.User{
-		FirstName: dto.FirstName,
-		LastName:  dto.LastName,
+		FirstName: &dto.FirstName,
+		LastName:  &dto.LastName,
 		Email:     dto.Email,
 		Password:  hashedPassword,
 	}
@@ -40,8 +40,8 @@ func MapUpdateUserDto(dto *UpdateUserDto, id int) model.User {
 
 	return model.User{
 		Common:    model.Common{ID: id},
-		FirstName: dto.FirstName,
-		LastName:  dto.LastName,
+		FirstName: &dto.FirstName,
+		LastName:  &dto.LastName,
 		Email:     dto.Email,
 		Password:  hashedPassword,
 	}
