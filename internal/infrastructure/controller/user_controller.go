@@ -112,13 +112,7 @@ func (u *userController) Create(c *gin.Context) {
 // @Router /users/me [post]
 // @Security JWT
 func (u *userController) Me(c *gin.Context) {
-	id, _ := c.Get("user")
-
-	user, err := u.UserService.FindById(id.(int))
-	if err != nil {
-		common.RaiseHttpError(c, http.StatusNotFound, err)
-		return
-	}
+	user, _ := c.Get("user")
 
 	c.JSON(http.StatusOK, user)
 }

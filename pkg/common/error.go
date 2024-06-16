@@ -1,18 +1,20 @@
 package common
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
-func RaiseHttpError(ctx *gin.Context, status int, err error) {
-	ctx.AbortWithStatusJSON(status, HttpError{
-		Code:    status,
-		Message: err.Error(),
+func RaiseHttpError(ctx *gin.Context, statusCode int, err error) {
+	ctx.AbortWithStatusJSON(statusCode, HttpError{
+		StatusCode: statusCode,
+		Message:    err.Error(),
 	})
 }
 
 // Exporting this in order to use it in API docs
 type HttpError struct {
-	Code    int    `json:"statusCode" example:"400"`
-	Message string `json:"message" example:"bad request"`
+	StatusCode int    `json:"statusCode" example:"400"`
+	Message    string `json:"message" example:"Bad Request"`
 }
 
 func (e *HttpError) Error() string {

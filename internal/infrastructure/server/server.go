@@ -29,6 +29,7 @@ func registerRoutes() *gin.Engine {
 
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
+	router.Use(middleware.GlobalErrorHandler())
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowAllOrigins = true
