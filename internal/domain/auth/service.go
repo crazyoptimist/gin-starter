@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
-	"net/http"
 
 	"gin-starter/internal/domain/model"
 	"gin-starter/internal/domain/user"
@@ -30,14 +30,11 @@ func NewAuthService(userRepository user.UserRepository, authHelper AuthHelper) *
 
 func (s *AuthService) Register(registerDto *RegisterDto) (*LoginResponse, error) {
 	if _, err := s.UserRepository.FindByEmail(registerDto.Email); err == nil {
-		return nil, &utils.HttpError{
-			Code:    http.StatusBadRequest,
-			Message: "Account already exists with the email",
-		}
+		return nil, errors.New("Account already exists with the same email")
 	}
 
 	if registerDto.Password != registerDto.PasswordConfirmation {
-		return nil, &utils.HttpError{Code: http.StatusBadRequest, Message: "Password mismatched"}
+		return nil, errors.New("Password mismatched")
 	}
 
 	if hashedPassword, err := utils.HashPassword(registerDto.Password); err != nil {
@@ -74,7 +71,7 @@ func (s *AuthService) Login(loginDto *LoginDto) (*LoginResponse, error) {
 	}
 
 	if err := utils.VerifyPassword(user.Password, loginDto.Password); err != nil {
-		return nil, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid password"}
+		return nil, errors.New("Invalid password")
 	}
 
 	accessToken, refreshToken, err := GenerateTokenPair(user.ID)
@@ -97,11 +94,11 @@ func (s *AuthService) RefreshToken(logoutDto *LogoutDto) (*LoginResponse, error)
 	}
 
 	if !isTokenValid {
-		return nil, fmt.Errorf("Refresh token is invalid")
+		return nil, errors.New("Invalid refresh token")
 	}
 
 	if keyId != RefreshTokenKeyId {
-		return nil, fmt.Errorf("Wrong key ID")
+		return nil, errors.New("Invalid key ID")
 	}
 
 	isTokenBlacklisted, err := s.AuthHelper.IsTokenBlacklisted(logoutDto.RefreshToken)

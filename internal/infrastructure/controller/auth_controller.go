@@ -11,7 +11,7 @@ import (
 	"gin-starter/internal/domain/auth"
 	"gin-starter/internal/infrastructure/helper"
 	"gin-starter/internal/infrastructure/repository"
-	"gin-starter/pkg/utils"
+	"gin-starter/pkg/common"
 )
 
 type authController struct {
@@ -30,19 +30,19 @@ func NewAuthController(db *gorm.DB) *authController {
 // @Tags auth
 // @Param request body auth.RegisterDto true "RegisterDto"
 // @Success 201	{object} auth.LoginResponse
-// @Failure 400 {object} utils.HttpError
-// @Failure 500 {object} utils.HttpError
+// @Failure 400 {object} common.HttpError
+// @Failure 500 {object} common.HttpError
 // @Router /auth/register [post]
 func (a *authController) Register(c *gin.Context) {
 	var registerDto auth.RegisterDto
 	if err := c.BindJSON(&registerDto); err != nil {
-		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	loginResponse, err := a.AuthService.Register(&registerDto)
 	if err != nil {
-		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 	loginResponse.ExpiresIn = config.Global.JwtAccessTokenExpiresIn.Seconds()
@@ -55,20 +55,20 @@ func (a *authController) Register(c *gin.Context) {
 // @Tags auth
 // @Param request body auth.LoginDto true "LoginDto"
 // @Success 201	{object} auth.LoginResponse
-// @Failure 400 {object} utils.HttpError
-// @Failure 401 {object} utils.HttpError
-// @Failure 404 {object} utils.HttpError
+// @Failure 400 {object} common.HttpError
+// @Failure 401 {object} common.HttpError
+// @Failure 404 {object} common.HttpError
 // @Router /auth/login [post]
 func (a *authController) Login(c *gin.Context) {
 	var loginDto auth.LoginDto
 	if err := c.BindJSON(&loginDto); err != nil {
-		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	loginResponse, err := a.AuthService.Login(&loginDto)
 	if err != nil {
-		utils.RaiseHttpError(c, http.StatusUnauthorized, err)
+		common.RaiseHttpError(c, http.StatusUnauthorized, err)
 		return
 	}
 	loginResponse.ExpiresIn = config.Global.JwtAccessTokenExpiresIn.Seconds()
@@ -80,19 +80,19 @@ func (a *authController) Login(c *gin.Context) {
 // @Summary Logout user (Invalidates refresh token)
 // @Tags auth
 // @Success 200
-// @Failure 401 {object} utils.HttpError
-// @Failure 500 {object} utils.HttpError
+// @Failure 401 {object} common.HttpError
+// @Failure 500 {object} common.HttpError
 // @Router /auth/logout [post]
 // @Security JWT
 func (a *authController) Logout(c *gin.Context) {
 	var logoutDto auth.LogoutDto
 	if err := c.BindJSON(&logoutDto); err != nil {
-		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := a.AuthService.Logout(&logoutDto); err != nil {
-		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		common.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -104,23 +104,23 @@ func (a *authController) Logout(c *gin.Context) {
 // @Tags auth
 // @Param request body auth.LogoutDto true "TokenRefresh DTO"
 // @Success 201	{object} auth.LoginResponse
-// @Failure 400 {object} utils.HttpError
-// @Failure 500 {object} utils.HttpError
+// @Failure 400 {object} common.HttpError
+// @Failure 500 {object} common.HttpError
 // @Router /auth/refresh [post]
 func (a *authController) RefreshToken(c *gin.Context) {
 	var refreshDto auth.LogoutDto
 	if err := c.BindJSON(&refreshDto); err != nil {
-		utils.RaiseHttpError(c, http.StatusBadRequest, err)
+		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	refreshResponse, err := a.AuthService.RefreshToken(&refreshDto)
 	if err != nil {
 		if errors.Is(err, auth.ErrTokenBlacklisted) {
-			utils.RaiseHttpError(c, http.StatusUnauthorized, err)
+			common.RaiseHttpError(c, http.StatusUnauthorized, err)
 			return
 		}
-		utils.RaiseHttpError(c, http.StatusInternalServerError, err)
+		common.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
 	}
 

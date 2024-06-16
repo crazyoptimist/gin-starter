@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"net/http"
+	"errors"
 	"strconv"
 	"time"
 
@@ -9,7 +9,6 @@ import (
 
 	"gin-starter/internal/config"
 	"gin-starter/pkg/common"
-	"gin-starter/pkg/utils"
 )
 
 const (
@@ -106,7 +105,7 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 	}
 
 	if !token.Valid {
-		err = &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid Token"}
+		err = errors.New("Invalid JWT token")
 		return
 	}
 

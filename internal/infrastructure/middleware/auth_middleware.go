@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
@@ -12,7 +13,7 @@ import (
 	"gin-starter/internal/config"
 	"gin-starter/internal/domain/model"
 	"gin-starter/internal/infrastructure/controller"
-	"gin-starter/pkg/utils"
+	"gin-starter/pkg/common"
 )
 
 const CACHE_USER_TTL = 24 * time.Hour
@@ -21,7 +22,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Authorization token is required"})
+			raiseUnauthorizedError(c, "Authorization header is required")
 			return
 		}
 
@@ -31,32 +32,36 @@ func AuthMiddleware() gin.HandlerFunc {
 		if len(tokenSplit) == 2 {
 			accessToken = strings.TrimSpace(tokenSplit[1])
 		} else {
-			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token format"})
+			raiseUnauthorizedError(c, "Invalid authorization header")
 			return
 		}
 
 		claims := jwt.MapClaims{}
-		parsedToken, err := jwt.ParseWithClaims(accessToken, claims, func(token *jwt.Token) (interface{}, error) {
-			return []byte(config.Global.JwtAccessTokenSecret), nil
-		})
+		parsedToken, err := jwt.ParseWithClaims(
+			accessToken,
+			claims,
+			func(token *jwt.Token) (interface{}, error) {
+				return []byte(config.Global.JwtAccessTokenSecret), nil
+			},
+		)
 
 		if err != nil {
 			if err == jwt.ErrSignatureInvalid {
-				utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token signature"})
+				raiseUnauthorizedError(c, "Invalid authorization token signature")
 				return
 			}
-			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token"})
+			raiseUnauthorizedError(c, "Invalid authorization token")
 			return
 		}
 
 		if !parsedToken.Valid {
-			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Invalid authorization token"})
+			raiseUnauthorizedError(c, "Invalid authorization token")
 			return
 		}
 
 		issuer, err := parsedToken.Claims.GetIssuer()
 		if err != nil {
-			utils.RaiseHttpError(c, http.StatusUnauthorized, &utils.HttpError{Code: http.StatusUnauthorized, Message: "Getting issuer from the parsed token failed"})
+			raiseUnauthorizedError(c, "Getting issuer from the parsed token failed")
 			return
 
 		}
@@ -73,27 +78,13 @@ func AuthMiddleware() gin.HandlerFunc {
 			if err := config.Global.DB.Where(
 				"id = ?", issuer,
 			).First(&user).Error; err != nil {
-				utils.RaiseHttpError(
-					c,
-					http.StatusUnauthorized,
-					&utils.HttpError{
-						Code:    http.StatusUnauthorized,
-						Message: "User not found",
-					},
-				)
+				raiseUnauthorizedError(c, "User not found")
 				return
 			}
 			// And cache the user
 			userJson, err := json.Marshal(user)
 			if err != nil {
-				utils.RaiseHttpError(
-					c,
-					http.StatusUnauthorized,
-					&utils.HttpError{
-						Code:    http.StatusUnauthorized,
-						Message: "Marshaling user failed",
-					},
-				)
+				raiseUnauthorizedError(c, "Marshaling user failed")
 				return
 			}
 			if err := config.Global.RedisClient.Set(
@@ -102,28 +93,14 @@ func AuthMiddleware() gin.HandlerFunc {
 				userJson,
 				CACHE_USER_TTL,
 			).Err(); err != nil {
-				utils.RaiseHttpError(
-					c,
-					http.StatusUnauthorized,
-					&utils.HttpError{
-						Code:    http.StatusUnauthorized,
-						Message: "Caching user failed",
-					},
-				)
+				raiseUnauthorizedError(c, "Caching user failed")
 				return
 			}
 		} else {
 			// If a cached user exists, use it
 			err = json.Unmarshal([]byte(userJson), &user)
 			if err != nil {
-				utils.RaiseHttpError(
-					c,
-					http.StatusUnauthorized,
-					&utils.HttpError{
-						Code:    http.StatusUnauthorized,
-						Message: "Unmarshaling cached user failed",
-					},
-				)
+				raiseUnauthorizedError(c, "Unmarshaling cached user failed")
 			}
 		}
 
@@ -132,4 +109,12 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		c.Next()
 	}
+}
+
+func raiseUnauthorizedError(c *gin.Context, message string) {
+	common.RaiseHttpError(
+		c,
+		http.StatusUnauthorized,
+		errors.New(message),
+	)
 }
