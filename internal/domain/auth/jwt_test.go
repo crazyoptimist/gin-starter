@@ -21,7 +21,7 @@ func TestGenerateAccessToken(t *testing.T) {
 		accessToken, err := GenerateJwtToken(AccessTokenKeyId, userId)
 		assert.NoError(t, err)
 
-		isValid, _, _, _ := ValidateToken(accessToken)
+		isValid, _, _, _ := ValidateJwtToken(accessToken)
 
 		if isValid != true {
 			t.Errorf(

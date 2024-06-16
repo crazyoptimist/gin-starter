@@ -107,14 +107,14 @@ func (a *authController) Logout(c *gin.Context) {
 // @Failure 400 {object} common.HttpError
 // @Failure 500 {object} common.HttpError
 // @Router /auth/refresh [post]
-func (a *authController) RefreshToken(c *gin.Context) {
+func (a *authController) Refresh(c *gin.Context) {
 	var refreshDto auth.LogoutDto
 	if err := c.BindJSON(&refreshDto); err != nil {
 		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
 
-	refreshResponse, err := a.AuthService.RefreshToken(&refreshDto)
+	refreshResponse, err := a.AuthService.Refresh(&refreshDto)
 	if err != nil {
 		if errors.Is(err, auth.ErrTokenBlacklisted) {
 			common.RaiseHttpError(c, http.StatusUnauthorized, err)

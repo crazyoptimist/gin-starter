@@ -13,7 +13,7 @@ func registerAuthRoutes(g *gin.RouterGroup) {
 	g.POST("/register", controllers.Register)
 	g.POST("/login", controllers.Login)
 	g.POST("/logout", controllers.Logout, middleware.AuthMiddleware())
-	g.POST("/refresh", controllers.RefreshToken)
+	g.POST("/refresh", controllers.Refresh)
 }
 
 func registerUserRoutes(g *gin.RouterGroup) {

@@ -40,7 +40,7 @@ func GenerateJwtToken(keyId int, userId int) (string, error) {
 	issuedAt := time.Now()
 	claims["iat"] = issuedAt.Unix()
 	claims["exp"] = issuedAt.Add(expiresIn).Unix()
-	claims["sub"] = strconv.Itoa(int(userId))
+	claims["sub"] = strconv.Itoa(userId)
 
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
@@ -65,44 +65,43 @@ func GenerateTokenPair(userId int) (accessToken, refreshToken string, err error)
 	return
 }
 
-func ValidateToken(tokenString string) (isValid bool, userId int, keyId int, err error) {
-
-	var key []byte
+func ValidateJwtToken(tokenString string) (isValid bool, sub string, keyId int, err error) {
+	var secret []byte
 
 	claims := jwt.MapClaims{}
 
-	token, err := jwt.ParseWithClaims(
+	parsedToken, err := jwt.ParseWithClaims(
 		tokenString,
 		claims,
 		func(token *jwt.Token) (interface{}, error) {
-
 			keyId = int(token.Header["kid"].(float64))
 
 			switch keyId {
 			case AccessTokenKeyId:
-				key = []byte(config.Global.JwtAccessTokenSecret)
+				secret = []byte(config.Global.JwtAccessTokenSecret)
 			case RefreshTokenKeyId:
-				key = []byte(config.Global.JwtRefreshTokenSecret)
+				secret = []byte(config.Global.JwtRefreshTokenSecret)
 			}
 
-			return key, nil
+			return secret, nil
 		},
 	)
-
 	if err != nil {
 		common.Logger.Error("JWT validation failed: ", err)
 		return
 	}
 
-	if !token.Valid {
+	if !parsedToken.Valid {
 		err = errors.New("Invalid JWT token")
 		return
 	}
 
 	isValid = true
 
-	sub, err := claims.GetSubject()
-	userId, err = strconv.Atoi(sub)
+	sub, err = parsedToken.Claims.GetSubject()
+	if err != nil {
+		return
+	}
 
 	return
 }

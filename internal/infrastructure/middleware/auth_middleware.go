@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 
 	"gin-starter/internal/config"
+	"gin-starter/internal/domain/auth"
 	"gin-starter/internal/domain/model"
 	"gin-starter/internal/infrastructure/controller"
 	"gin-starter/pkg/common"
@@ -36,34 +36,18 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		claims := jwt.MapClaims{}
-		parsedToken, err := jwt.ParseWithClaims(
-			accessToken,
-			claims,
-			func(token *jwt.Token) (interface{}, error) {
-				return []byte(config.Global.JwtAccessTokenSecret), nil
-			},
-		)
-
+		isJwtValid, userIdString, _, err := auth.ValidateJwtToken(accessToken)
 		if err != nil {
-			if err == jwt.ErrSignatureInvalid {
-				raiseUnauthorizedError(c, "Invalid authorization token signature")
-				return
-			}
-			raiseUnauthorizedError(c, "Invalid authorization token")
+			common.RaiseHttpError(
+				c,
+				http.StatusUnauthorized,
+				err,
+			)
 			return
 		}
-
-		if !parsedToken.Valid {
-			raiseUnauthorizedError(c, "Invalid authorization token")
+		if !isJwtValid {
+			raiseUnauthorizedError(c, "Invalid access token")
 			return
-		}
-
-		userIdString, err := parsedToken.Claims.GetSubject()
-		if err != nil {
-			raiseUnauthorizedError(c, "Missing subject in JWT")
-			return
-
 		}
 
 		var user model.User

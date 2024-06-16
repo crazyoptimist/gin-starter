@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"gin-starter/internal/domain/model"
 	"gin-starter/internal/domain/user"
@@ -86,9 +87,9 @@ func (s *AuthService) Logout(logoutDto *LogoutDto) error {
 	return s.AuthHelper.BlacklistToken(logoutDto.RefreshToken)
 }
 
-func (s *AuthService) RefreshToken(logoutDto *LogoutDto) (*LoginResponse, error) {
+func (s *AuthService) Refresh(logoutDto *LogoutDto) (*LoginResponse, error) {
 
-	isTokenValid, userId, keyId, err := ValidateToken(logoutDto.RefreshToken)
+	isTokenValid, userIdString, keyId, err := ValidateJwtToken(logoutDto.RefreshToken)
 	if err != nil {
 		return nil, err
 	}
@@ -115,6 +116,7 @@ func (s *AuthService) RefreshToken(logoutDto *LogoutDto) (*LoginResponse, error)
 		return nil, err
 	}
 
+	userId, err := strconv.Atoi(userIdString)
 	accessToken, refreshToken, err := GenerateTokenPair(userId)
 	if err != nil {
 		return nil, err
