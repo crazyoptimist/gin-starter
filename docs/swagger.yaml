@@ -13,6 +13,8 @@ definitions:
     properties:
       accessToken:
         type: string
+      expiresIn:
+        type: number
       refreshToken:
         type: string
     type: object
@@ -39,6 +41,15 @@ definitions:
     - email
     - password
     - passwordConfirmation
+    type: object
+  common.HttpError:
+    properties:
+      message:
+        example: bad request
+        type: string
+      statusCode:
+        example: 400
+        type: integer
     type: object
   model.User:
     properties:
@@ -79,15 +90,6 @@ definitions:
       password:
         type: string
     type: object
-  utils.HttpError:
-    properties:
-      code:
-        example: 400
-        type: integer
-      message:
-        example: bad request
-        type: string
-    type: object
 info:
   contact: {}
 paths:
@@ -108,15 +110,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       summary: Login user
       tags:
       - auth
@@ -128,11 +130,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       security:
       - JWT: []
       summary: Logout user (Invalidates refresh token)
@@ -155,11 +157,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       summary: Refresh tokens and invalidate the previous refresh token
       tags:
       - auth
@@ -180,11 +182,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       summary: Register new user
       tags:
       - auth
@@ -200,7 +202,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       security:
       - JWT: []
       summary: Retrieves users
@@ -222,11 +224,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       security:
       - JWT: []
       summary: Create a new user
@@ -246,7 +248,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       security:
       - JWT: []
       summary: Delete user
@@ -267,15 +269,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       security:
       - JWT: []
       summary: Retrieves a user by ID
@@ -302,15 +304,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       security:
       - JWT: []
       summary: Update user
@@ -326,11 +328,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/utils.HttpError'
+            $ref: '#/definitions/common.HttpError'
       security:
       - JWT: []
       summary: Get my profile

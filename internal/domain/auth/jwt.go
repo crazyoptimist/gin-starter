@@ -28,7 +28,7 @@ func GenerateAccessToken(userId uint) (string, error) {
 	issuedAt := time.Now()
 	claims["iat"] = issuedAt.Unix()
 	claims["exp"] = issuedAt.Add(expiresIn).Unix()
-	claims["iss"] = strconv.Itoa(int(userId))
+	claims["sub"] = strconv.Itoa(int(userId))
 
 	accessToken, err := token.SignedString(secretKey)
 	if err != nil {
@@ -50,7 +50,7 @@ func GenerateRefreshToken(userId uint) (string, error) {
 	issuedAt := time.Now()
 	claims["iat"] = issuedAt.Unix()
 	claims["exp"] = issuedAt.Add(expiresIn).Unix()
-	claims["iss"] = strconv.Itoa(int(userId))
+	claims["sub"] = strconv.Itoa(int(userId))
 
 	refreshToken, err := token.SignedString(secretKey)
 	if err != nil {
@@ -111,9 +111,9 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	isValid = true
 
-	issuer, _ := claims.GetIssuer()
-	issuerAsInt, _ := strconv.Atoi(issuer)
-	userId = uint(issuerAsInt)
+	sub, _ := claims.GetSubject()
+	subAsInt, _ := strconv.Atoi(sub)
+	userId = uint(subAsInt)
 
 	return
 }

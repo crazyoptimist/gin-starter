@@ -42,19 +42,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -78,13 +78,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -117,13 +117,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -156,13 +156,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -192,7 +192,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -228,13 +228,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -261,13 +261,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -303,19 +303,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -346,7 +346,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -389,19 +389,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/utils.HttpError"
+                            "$ref": "#/definitions/common.HttpError"
                         }
                     }
                 }
@@ -429,6 +429,9 @@ const docTemplate = `{
             "properties": {
                 "accessToken": {
                     "type": "string"
+                },
+                "expiresIn": {
+                    "type": "number"
                 },
                 "refreshToken": {
                     "type": "string"
@@ -468,6 +471,19 @@ const docTemplate = `{
                 },
                 "passwordConfirmation": {
                     "type": "string"
+                }
+            }
+        },
+        "common.HttpError": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "bad request"
+                },
+                "statusCode": {
+                    "type": "integer",
+                    "example": 400
                 }
             }
         },
@@ -528,19 +544,6 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
-                }
-            }
-        },
-        "utils.HttpError": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 400
-                },
-                "message": {
-                    "type": "string",
-                    "example": "bad request"
                 }
             }
         }

@@ -59,9 +59,9 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		issuer, err := parsedToken.Claims.GetIssuer()
+		userIdString, err := parsedToken.Claims.GetSubject()
 		if err != nil {
-			raiseUnauthorizedError(c, "Getting issuer from the parsed token failed")
+			raiseUnauthorizedError(c, "Missing subject in JWT")
 			return
 
 		}
@@ -71,12 +71,12 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Check if there's a cached user
 		userJson, err := config.Global.RedisClient.Get(
 			c,
-			controller.CACHE_KEY_PREFIX_USER+issuer,
+			controller.CACHE_KEY_PREFIX_USER+userIdString,
 		).Result()
 		if err != nil {
 			// If there's no cached user, query DB
 			if err := config.Global.DB.Where(
-				"id = ?", issuer,
+				"id = ?", userIdString,
 			).First(&user).Error; err != nil {
 				raiseUnauthorizedError(c, "User not found")
 				return
@@ -89,7 +89,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			}
 			if err := config.Global.RedisClient.Set(
 				c,
-				controller.CACHE_KEY_PREFIX_USER+issuer,
+				controller.CACHE_KEY_PREFIX_USER+userIdString,
 				userJson,
 				CACHE_USER_TTL,
 			).Err(); err != nil {
