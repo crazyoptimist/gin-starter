@@ -16,13 +16,25 @@ const (
 	RefreshTokenKeyId
 )
 
-func GenerateAccessToken(userId int) (string, error) {
+func GenerateJwtToken(keyId int, userId int) (string, error) {
+	var secretKey []byte
+	var expiresIn time.Duration
 
-	secretKey := []byte(config.Global.JwtAccessTokenSecret)
-	expiresIn := config.Global.JwtAccessTokenExpiresIn
+	switch keyId {
+	case RefreshTokenKeyId:
+		secretKey = []byte(config.Global.JwtRefreshTokenSecret)
+		expiresIn = config.Global.JwtRefreshTokenExpiresIn
+	case AccessTokenKeyId:
+		secretKey = []byte(config.Global.JwtAccessTokenSecret)
+		expiresIn = config.Global.JwtAccessTokenExpiresIn
+	default:
+		keyId = AccessTokenKeyId
+		secretKey = []byte(config.Global.JwtAccessTokenSecret)
+		expiresIn = config.Global.JwtAccessTokenExpiresIn
+	}
 
 	token := jwt.New(jwt.SigningMethodHS256)
-	token.Header["kid"] = AccessTokenKeyId
+	token.Header["kid"] = keyId
 
 	claims := token.Claims.(jwt.MapClaims)
 	issuedAt := time.Now()
@@ -30,44 +42,22 @@ func GenerateAccessToken(userId int) (string, error) {
 	claims["exp"] = issuedAt.Add(expiresIn).Unix()
 	claims["sub"] = strconv.Itoa(int(userId))
 
-	accessToken, err := token.SignedString(secretKey)
+	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
 	}
 
-	return accessToken, nil
-}
-
-func GenerateRefreshToken(userId int) (string, error) {
-
-	secretKey := []byte(config.Global.JwtRefreshTokenSecret)
-	expiresIn := config.Global.JwtRefreshTokenExpiresIn
-
-	token := jwt.New(jwt.SigningMethodHS256)
-	token.Header["kid"] = RefreshTokenKeyId
-
-	claims := token.Claims.(jwt.MapClaims)
-	issuedAt := time.Now()
-	claims["iat"] = issuedAt.Unix()
-	claims["exp"] = issuedAt.Add(expiresIn).Unix()
-	claims["sub"] = strconv.Itoa(int(userId))
-
-	refreshToken, err := token.SignedString(secretKey)
-	if err != nil {
-		return "", err
-	}
-
-	return refreshToken, nil
+	return tokenString, nil
 }
 
 func GenerateTokenPair(userId int) (accessToken, refreshToken string, err error) {
 
-	accessToken, err = GenerateAccessToken(userId)
+	accessToken, err = GenerateJwtToken(AccessTokenKeyId, userId)
 	if err != nil {
 		return
 	}
 
-	refreshToken, err = GenerateRefreshToken(userId)
+	refreshToken, err = GenerateJwtToken(RefreshTokenKeyId, userId)
 	if err != nil {
 		return
 	}

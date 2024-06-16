@@ -18,13 +18,16 @@ func TestGenerateAccessToken(t *testing.T) {
 	t.Run("Generate a valid access token", func(t *testing.T) {
 
 		userId := 1
-		accessToken, err := GenerateAccessToken(userId)
+		accessToken, err := GenerateJwtToken(AccessTokenKeyId, userId)
 		assert.NoError(t, err)
 
 		isValid, _, _, _ := ValidateToken(accessToken)
 
 		if isValid != true {
-			t.Errorf("Expected a valid access token, but got an invalid one:\n %v ", accessToken)
+			t.Errorf(
+				"Expected a valid access token, but got an invalid one:\n %v ",
+				accessToken,
+			)
 		}
 	})
 }
