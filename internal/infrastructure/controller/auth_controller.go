@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -116,11 +115,7 @@ func (a *authController) Refresh(c *gin.Context) {
 
 	refreshResponse, err := a.AuthService.Refresh(&refreshDto)
 	if err != nil {
-		if errors.Is(err, auth.ErrTokenBlacklisted) {
-			common.RaiseHttpError(c, http.StatusUnauthorized, err)
-			return
-		}
-		common.RaiseHttpError(c, http.StatusInternalServerError, err)
+		common.RaiseHttpError(c, http.StatusUnauthorized, err)
 		return
 	}
 

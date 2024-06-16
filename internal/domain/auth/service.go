@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"gin-starter/internal/domain/model"
@@ -14,8 +13,6 @@ type AuthHelper interface {
 	BlacklistToken(token string) error
 	IsTokenBlacklisted(token string) (bool, error)
 }
-
-var ErrTokenBlacklisted = fmt.Errorf("Refresh token is blacklisted")
 
 type AuthService struct {
 	UserRepository user.UserRepository
@@ -108,7 +105,7 @@ func (s *AuthService) Refresh(logoutDto *LogoutDto) (*LoginResponse, error) {
 	}
 
 	if isTokenBlacklisted {
-		return nil, ErrTokenBlacklisted
+		return nil, errors.New("Invalid refresh token")
 	}
 
 	err = s.AuthHelper.BlacklistToken(logoutDto.RefreshToken)
