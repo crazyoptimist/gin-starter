@@ -17,7 +17,7 @@ func TestGenerateAccessToken(t *testing.T) {
 
 	t.Run("Generate a valid access token", func(t *testing.T) {
 
-		userId := uint(1)
+		userId := 1
 		accessToken, err := GenerateAccessToken(userId)
 		assert.NoError(t, err)
 

@@ -69,7 +69,7 @@ func (u *userController) FindById(c *gin.Context) {
 		return
 	}
 
-	user, err := u.UserService.FindById(uint(id))
+	user, err := u.UserService.FindById(id)
 	if err != nil {
 		common.RaiseHttpError(c, http.StatusNotFound, err)
 		return
@@ -114,7 +114,7 @@ func (u *userController) Create(c *gin.Context) {
 func (u *userController) Me(c *gin.Context) {
 	id, _ := c.Get("user")
 
-	user, err := u.UserService.FindById(uint(id.(int)))
+	user, err := u.UserService.FindById(id.(int))
 	if err != nil {
 		common.RaiseHttpError(c, http.StatusNotFound, err)
 		return
@@ -141,7 +141,7 @@ func (u *userController) Update(c *gin.Context) {
 		return
 	}
 
-	if _, err := u.UserService.FindById(uint(id)); err != nil {
+	if _, err := u.UserService.FindById(id); err != nil {
 		common.RaiseHttpError(c, http.StatusNotFound, err)
 		return
 	}
@@ -152,7 +152,7 @@ func (u *userController) Update(c *gin.Context) {
 		return
 	}
 
-	user, err := u.UserService.Update(&updateUserDto, uint(id))
+	user, err := u.UserService.Update(&updateUserDto, id)
 	if err != nil {
 		common.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
@@ -178,7 +178,7 @@ func (u *userController) Delete(c *gin.Context) {
 		return
 	}
 
-	if err := u.UserService.Delete(uint(id)); err != nil {
+	if err := u.UserService.Delete(id); err != nil {
 		common.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
 	}

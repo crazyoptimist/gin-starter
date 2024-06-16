@@ -12,11 +12,11 @@ import (
 )
 
 const (
-	AccessTokenKeyId uint = iota + 1
+	AccessTokenKeyId int = iota + 1
 	RefreshTokenKeyId
 )
 
-func GenerateAccessToken(userId uint) (string, error) {
+func GenerateAccessToken(userId int) (string, error) {
 
 	secretKey := []byte(config.Global.JwtAccessTokenSecret)
 	expiresIn := config.Global.JwtAccessTokenExpiresIn
@@ -38,7 +38,7 @@ func GenerateAccessToken(userId uint) (string, error) {
 	return accessToken, nil
 }
 
-func GenerateRefreshToken(userId uint) (string, error) {
+func GenerateRefreshToken(userId int) (string, error) {
 
 	secretKey := []byte(config.Global.JwtRefreshTokenSecret)
 	expiresIn := config.Global.JwtRefreshTokenExpiresIn
@@ -60,7 +60,7 @@ func GenerateRefreshToken(userId uint) (string, error) {
 	return refreshToken, nil
 }
 
-func GenerateTokenPair(userId uint) (accessToken, refreshToken string, err error) {
+func GenerateTokenPair(userId int) (accessToken, refreshToken string, err error) {
 
 	accessToken, err = GenerateAccessToken(userId)
 	if err != nil {
@@ -75,7 +75,7 @@ func GenerateTokenPair(userId uint) (accessToken, refreshToken string, err error
 	return
 }
 
-func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, err error) {
+func ValidateToken(tokenString string) (isValid bool, userId int, keyId int, err error) {
 
 	var key []byte
 
@@ -86,7 +86,7 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 		claims,
 		func(token *jwt.Token) (interface{}, error) {
 
-			keyId = uint(token.Header["kid"].(float64))
+			keyId = int(token.Header["kid"].(float64))
 
 			switch keyId {
 			case AccessTokenKeyId:
@@ -111,9 +111,8 @@ func ValidateToken(tokenString string) (isValid bool, userId uint, keyId uint, e
 
 	isValid = true
 
-	sub, _ := claims.GetSubject()
-	subAsInt, _ := strconv.Atoi(sub)
-	userId = uint(subAsInt)
+	sub, err := claims.GetSubject()
+	userId, err = strconv.Atoi(sub)
 
 	return
 }

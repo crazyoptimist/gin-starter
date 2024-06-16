@@ -43,7 +43,7 @@ func (r *userRepositoryStub) FindAll(
 	return r.records, 2, nil
 }
 
-func (r *userRepositoryStub) FindById(id uint) (*model.User, error) {
+func (r *userRepositoryStub) FindById(id int) (*model.User, error) {
 	for _, record := range r.records {
 		if record.ID == id {
 			return &record, nil

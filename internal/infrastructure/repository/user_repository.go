@@ -79,7 +79,7 @@ func (u *userRepository) FindAll(
 	return users, totalCount, nil
 }
 
-func (u *userRepository) FindById(id uint) (*model.User, error) {
+func (u *userRepository) FindById(id int) (*model.User, error) {
 	var user model.User
 
 	err := u.DB.Where("id = ?", id).First(&user).Error

@@ -32,7 +32,7 @@ type UpdateUserDto struct {
 	Password  string `json:"password"`
 }
 
-func MapUpdateUserDto(dto *UpdateUserDto, id uint) model.User {
+func MapUpdateUserDto(dto *UpdateUserDto, id int) model.User {
 	var hashedPassword string
 	if dto.Password != "" {
 		hashedPassword, _ = utils.HashPassword(dto.Password)

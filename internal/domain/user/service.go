@@ -11,7 +11,7 @@ type UserRepository interface {
 		sortParams []common.SortParam,
 		filterParams []common.FilterParam,
 	) ([]model.User, int64, error)
-	FindById(id uint) (*model.User, error)
+	FindById(id int) (*model.User, error)
 	FindByEmail(email string) (*model.User, error)
 	Create(user model.User) (*model.User, error)
 	Update(user model.User) (*model.User, error)
@@ -35,7 +35,7 @@ func (u *UserService) FindAll(
 	return u.UserRepository.FindAll(paginationParam, sortParams, filterParams)
 }
 
-func (u *UserService) FindById(id uint) (*model.User, error) {
+func (u *UserService) FindById(id int) (*model.User, error) {
 	return u.UserRepository.FindById(id)
 }
 
@@ -43,10 +43,10 @@ func (u *UserService) Create(createUserDto *CreateUserDto) (*model.User, error) 
 	return u.UserRepository.Create(MapCreateUserDto(createUserDto))
 }
 
-func (u *UserService) Update(updateUserDto *UpdateUserDto, id uint) (*model.User, error) {
+func (u *UserService) Update(updateUserDto *UpdateUserDto, id int) (*model.User, error) {
 	return u.UserRepository.Update(MapUpdateUserDto(updateUserDto, id))
 }
 
-func (u *UserService) Delete(id uint) error {
+func (u *UserService) Delete(id int) error {
 	return u.UserRepository.Delete(model.User{Common: model.Common{ID: id}})
 }
