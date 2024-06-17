@@ -4,25 +4,33 @@ import (
 	"errors"
 	"strconv"
 
+	"gin-starter/internal/config"
 	"gin-starter/internal/domain/model"
-	"gin-starter/internal/domain/user"
+	"gin-starter/pkg/common"
 	"gin-starter/pkg/utils"
 )
 
-type AuthHelper interface {
-	BlacklistToken(token string) error
-	IsTokenBlacklisted(token string) (bool, error)
+type UserRepository interface {
+	FindAll(
+		paginationParam common.PaginationParam,
+		sortParams []common.SortParam,
+		filterParams []common.FilterParam,
+	) ([]model.User, int64, error)
+	FindById(id int) (*model.User, error)
+	FindByEmail(email string) (*model.User, error)
+	Create(user model.User) (*model.User, error)
+	Update(user model.User) (*model.User, error)
+	Delete(user model.User) error
+	UpdateRefreshToken(userId int, refreshToken string) error
 }
 
 type AuthService struct {
-	UserRepository user.UserRepository
-	AuthHelper     AuthHelper
+	UserRepository UserRepository
 }
 
-func NewAuthService(userRepository user.UserRepository, authHelper AuthHelper) *AuthService {
+func NewAuthService(userRepository UserRepository) *AuthService {
 	return &AuthService{
 		UserRepository: userRepository,
-		AuthHelper:     authHelper,
 	}
 }
 
@@ -59,6 +67,7 @@ func (s *AuthService) Register(registerDto *RegisterDto) (*LoginResponse, error)
 	return &LoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		ExpiresIn:    config.Global.JwtAccessTokenExpiresIn.Seconds(),
 	}, nil
 }
 
@@ -77,50 +86,61 @@ func (s *AuthService) Login(loginDto *LoginDto) (*LoginResponse, error) {
 		return nil, err
 	}
 
-	return &LoginResponse{AccessToken: accessToken, RefreshToken: refreshToken}, nil
-}
-
-func (s *AuthService) Logout(logoutDto *LogoutDto) error {
-	return s.AuthHelper.BlacklistToken(logoutDto.RefreshToken)
-}
-
-func (s *AuthService) Refresh(logoutDto *LogoutDto) (*LoginResponse, error) {
-
-	isTokenValid, userIdString, keyId, err := ValidateJwtToken(logoutDto.RefreshToken)
-	if err != nil {
-		return nil, err
-	}
-
-	if !isTokenValid {
-		return nil, errors.New("Invalid refresh token")
-	}
-
-	if keyId != RefreshTokenKeyId {
-		return nil, errors.New("Invalid key ID")
-	}
-
-	isTokenBlacklisted, err := s.AuthHelper.IsTokenBlacklisted(logoutDto.RefreshToken)
-	if err != nil {
-		return nil, err
-	}
-
-	if isTokenBlacklisted {
-		return nil, errors.New("Invalid refresh token")
-	}
-
-	err = s.AuthHelper.BlacklistToken(logoutDto.RefreshToken)
-	if err != nil {
-		return nil, err
-	}
-
-	userId, err := strconv.Atoi(userIdString)
-	accessToken, refreshToken, err := GenerateTokenPair(userId)
-	if err != nil {
+	if err := s.UserRepository.UpdateRefreshToken(
+		user.ID,
+		refreshToken,
+	); err != nil {
 		return nil, err
 	}
 
 	return &LoginResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
+		ExpiresIn:    config.Global.JwtAccessTokenExpiresIn.Seconds(),
+	}, nil
+}
+
+func (s *AuthService) Logout(user model.User) error {
+	err := s.UserRepository.UpdateRefreshToken(user.ID, "")
+	return err
+}
+
+func (s *AuthService) Refresh(dto *RefreshDto) (*LoginResponse, error) {
+
+	_, userIdString, _, err := ValidateJwtToken(dto.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
+
+	userId, err := strconv.Atoi(userIdString)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := s.UserRepository.FindById(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	if *user.RefreshToken != dto.RefreshToken {
+		return nil, errors.New("Invalid refresh token")
+	}
+
+	accessToken, refreshToken, err := GenerateTokenPair(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.UserRepository.UpdateRefreshToken(
+		userId,
+		refreshToken,
+	); err != nil {
+		return nil, err
+	}
+
+	return &LoginResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		ExpiresIn:    config.Global.JwtAccessTokenExpiresIn.Seconds(),
 	}, nil
 }

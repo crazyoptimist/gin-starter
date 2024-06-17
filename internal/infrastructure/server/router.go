@@ -12,7 +12,7 @@ func registerAuthRoutes(g *gin.RouterGroup) {
 	controllers := controller.NewAuthController(config.Global.DB)
 	g.POST("/register", controllers.Register)
 	g.POST("/login", controllers.Login)
-	g.POST("/logout", controllers.Logout, middleware.AuthMiddleware())
+	g.POST("/logout", middleware.AuthMiddleware(), controllers.Logout)
 	g.POST("/refresh", controllers.Refresh)
 }
 

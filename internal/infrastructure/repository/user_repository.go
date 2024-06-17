@@ -87,6 +87,14 @@ func (u *userRepository) FindById(id int) (*model.User, error) {
 	return &user, err
 }
 
+func (u *userRepository) FindByEmail(email string) (*model.User, error) {
+	var user model.User
+
+	err := u.DB.Where("email = ?", email).First(&user).Error
+
+	return &user, err
+}
+
 func (u *userRepository) Create(user model.User) (*model.User, error) {
 	err := u.DB.Save(&user).Error
 	if err != nil {
@@ -105,14 +113,24 @@ func (u *userRepository) Update(user model.User) (*model.User, error) {
 	return &user, nil
 }
 
-func (u *userRepository) Delete(user model.User) error {
-	return u.DB.Delete(&user).Error
+func (u *userRepository) UpdateRefreshToken(userId int, refreshToken string) error {
+	err := u.DB.Model(
+		&model.User{},
+	).Where(
+		"id = ?",
+		userId,
+	).Updates(
+		map[string]interface{}{
+			"RefreshToken": refreshToken,
+		},
+	).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (u *userRepository) FindByEmail(email string) (*model.User, error) {
-	var user model.User
-
-	err := u.DB.Where("email = ?", email).First(&user).Error
-
-	return &user, err
+func (u *userRepository) Delete(user model.User) error {
+	return u.DB.Delete(&user).Error
 }

@@ -1,14 +1,14 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"gin-starter/internal/config"
 	"gin-starter/internal/domain/auth"
-	"gin-starter/internal/infrastructure/helper"
+	"gin-starter/internal/domain/model"
 	"gin-starter/internal/infrastructure/repository"
 	"gin-starter/pkg/common"
 )
@@ -19,8 +19,7 @@ type authController struct {
 
 func NewAuthController(db *gorm.DB) *authController {
 	userRepository := repository.NewUserRepository(db)
-	authHelper := helper.NewAuthHelper()
-	authService := auth.NewAuthService(userRepository, authHelper)
+	authService := auth.NewAuthService(userRepository)
 	return &authController{AuthService: *authService}
 }
 
@@ -44,7 +43,6 @@ func (a *authController) Register(c *gin.Context) {
 		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
 	}
-	loginResponse.ExpiresIn = config.Global.JwtAccessTokenExpiresIn.Seconds()
 
 	c.JSON(http.StatusCreated, loginResponse)
 }
@@ -70,13 +68,12 @@ func (a *authController) Login(c *gin.Context) {
 		common.RaiseHttpError(c, http.StatusUnauthorized, err)
 		return
 	}
-	loginResponse.ExpiresIn = config.Global.JwtAccessTokenExpiresIn.Seconds()
 
 	c.JSON(http.StatusCreated, loginResponse)
 }
 
 // Logout godoc
-// @Summary Logout user (Invalidates refresh token)
+// @Summary Logout user
 // @Tags auth
 // @Success 200
 // @Failure 401 {object} common.HttpError
@@ -84,13 +81,17 @@ func (a *authController) Login(c *gin.Context) {
 // @Router /auth/logout [post]
 // @Security JWT
 func (a *authController) Logout(c *gin.Context) {
-	var logoutDto auth.LogoutDto
-	if err := c.BindJSON(&logoutDto); err != nil {
-		common.RaiseHttpError(c, http.StatusBadRequest, err)
+	user, exists := c.Get("user")
+	if !exists {
+		common.RaiseHttpError(
+			c,
+			http.StatusInternalServerError,
+			errors.New("User missing in context"),
+		)
 		return
 	}
 
-	if err := a.AuthService.Logout(&logoutDto); err != nil {
+	if err := a.AuthService.Logout(user.(model.User)); err != nil {
 		common.RaiseHttpError(c, http.StatusInternalServerError, err)
 		return
 	}
@@ -107,7 +108,7 @@ func (a *authController) Logout(c *gin.Context) {
 // @Failure 500 {object} common.HttpError
 // @Router /auth/refresh [post]
 func (a *authController) Refresh(c *gin.Context) {
-	var refreshDto auth.LogoutDto
+	var refreshDto auth.RefreshDto
 	if err := c.BindJSON(&refreshDto); err != nil {
 		common.RaiseHttpError(c, http.StatusBadRequest, err)
 		return
