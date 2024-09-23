@@ -1,19 +1,17 @@
 package auth
 
 import (
-	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
 	"gin-starter/internal/config"
+	"gin-starter/pkg/common"
 )
 
 func TestGenerateAccessToken(t *testing.T) {
-	workdir, _ := os.Getwd()
-	envpath := "../../../.env"
-	_ = config.LoadConfig(filepath.Join(workdir, envpath))
+	common.SetUpTestEnv()
+	_ = config.LoadConfig("")
 
 	t.Run("Generate a valid access token", func(t *testing.T) {
 

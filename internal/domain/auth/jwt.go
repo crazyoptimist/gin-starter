@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"log/slog"
 	"strconv"
 	"time"
 
@@ -87,7 +88,7 @@ func ValidateJwtToken(tokenString string) (isValid bool, sub string, keyId int, 
 		},
 	)
 	if err != nil {
-		common.Logger.Error("JWT validation failed: ", err)
+		common.Logger.Error("JWT validation failed: ", slog.Any("error", err))
 		return
 	}
 
