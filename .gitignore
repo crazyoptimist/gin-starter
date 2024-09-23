@@ -15,5 +15,5 @@ bin
 # Live reload(Air)
 .tmp
 
-# Prod env
-deployments/*.env
+# Dotenv
+**/*.env
