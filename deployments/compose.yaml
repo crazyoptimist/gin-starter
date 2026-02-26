@@ -27,7 +27,7 @@ services:
       - redis
 
   postgresql:
-    image: postgres:16
+    image: postgres:18
     container_name: postgresql
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -36,12 +36,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/18/docker
     <<: *default_logging
     restart: unless-stopped
 
   redis:
-    image: redis:7
+    image: redis:8
     command: "redis-server --loglevel warning"
     volumes:
       - redis_data:/data/

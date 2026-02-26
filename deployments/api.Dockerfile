@@ -2,7 +2,7 @@
 ## STAGE 1 - BUILD
 ##
 
-FROM golang:1.22 as builder
+FROM golang:1.26 AS builder
 
 # Add a non-root user (for prod image)
 ARG USERNAME=iamuser
